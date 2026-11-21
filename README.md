@@ -8,6 +8,39 @@ A Hyper key for your Mac.
 
 One small menu bar app. No Karabiner, no kernel extensions, no subscription.
 
+## Why this exists
+
+I bounce between GNOME and macOS, and GNOME gets one thing exactly right: the Super key.
+Tap it and you're searching, so you type an app name and hit Enter. Hold it and press
+a number to jump to an app in the dock, or press a direction to snap the window. Back in
+2012 I described Activities as "one key, one place, do it all." I map Super to the
+*right-hand* Super key, because otherwise
+["I'd probably never touch that key"](https://joshtronic.com/2018/09/09/why-i-dont-use-a-tiling-window-manager/).
+
+I've been trying to get that same muscle memory on a Mac for over a decade:
+
+- **2014:** Alfred for launching, and Spectacle to
+  ["place windows with hot keys not unlike how xmonad works"](https://joshtronic.com/2014/07/20/tools-of-the-trade-2014/).
+- **2016:** Hammerspoon to bind modifier+number to my most-used apps, inspired by picking
+  weapons in Doom and Quake
+  ([Fastest way to switch between apps](https://joshtronic.com/2016/04/03/fastest-way-to-switch-between-apps/)).
+  Then Karabiner, so tapping **right ⌘** opened the launcher and right ⌘+number opened apps
+  ([Leveraging the power of the right command key in OS X](https://joshtronic.com/2016/06/05/leveraging-the-power-of-the-right-command-key-in-os-x/)).
+- **Later in 2016:** a macOS update broke Karabiner, and
+  ["this reliance on third-party hackery"](https://joshtronic.com/2016/10/16/switching-from-mac-os-x-back-to-linux-part-1/)
+  sent me back to Linux, where window snapping and app hotkeys are built in.
+- **2024:** back on a Mac, I tried Hyperkey with Hammerspoon, then Caps Lock as Hyper, and
+  landed on Karabiner-Elements plus Raycast. Right ⌘ tapped opens the launcher, right ⌘+1–9
+  opens apps, and right ⌘+WASD snaps windows, just like GNOME's Super+WASD
+  ([My quest to align hotkeys on macOS and GNOME](https://joshtronic.com/2024/11/10/align-hotkeys-macos-gnome/)).
+
+That last setup worked, but it took two apps, and Raycast was doing very little. I don't need
+a launcher with extensions. Spotlight is closer to how GNOME's search works anyway. Then Raycast
+put window snapping behind a subscription, so I was paying yearly for a few hotkeys.
+
+Haute Key is that whole setup in one app: the right ⌘ key as Super, Spotlight on tap, apps on
+numbers, and windows on WASD. No Karabiner, no Hammerspoon, no subscription.
+
 ## Requirements
 
 - macOS 15 or later
