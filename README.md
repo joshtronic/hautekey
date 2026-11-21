@@ -87,6 +87,11 @@ Quit Haute Key, delete the app, and reset the key mapping (quitting already does
 hidutil property --set '{"UserKeyMapping":[]}'
 ```
 
+## Support
+
+Haute Key is free and always will be. If it saves you a subscription, you can
+[sponsor me on GitHub](https://github.com/sponsors/joshtronic). Totally optional, and much appreciated.
+
 ## License
 
 GPL-3.0. See [LICENSE](LICENSE).
