@@ -151,11 +151,11 @@ public enum ConfigCodec {
         }
     }
 
-    private static func bindings(_ value: JSONValue) throws(ConfigError) -> [BindableKey: Binding] {
+    private static func bindings(_ value: JSONValue) throws(ConfigError) -> [BindableKey: KeyBinding] {
         guard case .object(let object) = value else {
             throw .invalid(field: "bindings", message: "must be an object")
         }
-        var result: [BindableKey: Binding] = [:]
+        var result: [BindableKey: KeyBinding] = [:]
         for rawKey in object.keys.sorted() {
             let field = "bindings.\(rawKey)"
             guard let key = BindableKey(rawKey) else {

@@ -32,7 +32,7 @@ public struct BindableKey: Hashable, Sendable, Comparable, CustomStringConvertib
     public var description: String { rawValue }
 }
 
-public enum Binding: Equatable, Sendable {
+public enum KeyBinding: Equatable, Sendable {
     case app(bundleID: String)
     case snap(SnapAction)
 }
@@ -67,7 +67,7 @@ public struct Config: Equatable, Sendable {
     public var hyperKey: HyperKey = .rightCommand
     public var capsLockToControl = false
     public var tapAction: TapAction = .spotlight
-    public var bindings: [BindableKey: Binding] = [:]
+    public var bindings: [BindableKey: KeyBinding] = [:]
     public var restoreSize: RestoreSize = .default
     /// Top-level keys this version doesn't recognize, kept so saves don't drop them.
     public var extra: [String: JSONValue] = [:]

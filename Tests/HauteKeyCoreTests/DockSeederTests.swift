@@ -7,7 +7,7 @@ private func tile(_ bundleID: String?) -> [String: Any] {
     return ["tile-data": data, "tile-type": "file-tile"]
 }
 
-private let snapDefaults: [BindableKey: Binding] = [
+private let snapDefaults: [BindableKey: KeyBinding] = [
     BindableKey("w")!: .snap(.maximize),
     BindableKey("a")!: .snap(.leftHalf),
     BindableKey("s")!: .snap(.restore),

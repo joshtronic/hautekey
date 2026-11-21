@@ -7,8 +7,9 @@ import SwiftUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let log = Logger(subsystem: "dev.hautekey.app", category: "app")
     private let presenter = WindowPresenter()
-    private let performer = ActionPerformer(
-        appLauncher: AppLauncher(), snapper: WindowSnapper(), spotlight: SpotlightLauncher()
+    private let spotlight = SpotlightLauncher()
+    private lazy var performer = ActionPerformer(
+        appLauncher: AppLauncher(), snapper: WindowSnapper(), spotlight: spotlight
     )
     private var model: AppModel?
     private var menuBar: MenuBarController?
@@ -25,6 +26,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.model = model
         menuBar = MenuBarController(model: model, presenter: presenter)
         presenter.onboardingView = { AnyView(OnboardingView(model: model)) }
+        presenter.settingsView = { [spotlight] in AnyView(SettingsView(model: model, spotlight: spotlight)) }
         model.onPermissionsMissing = { [presenter] in presenter.showOnboarding() }
         model.onPermissionsGranted = { [presenter] in presenter.closeOnboarding() }
         model.startWatching()
