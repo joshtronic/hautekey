@@ -1,7 +1,7 @@
 import AppKit
-import ApplicationServices
 import HauteKeyCore
 import os
+import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -12,7 +12,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     )
     private var model: AppModel?
     private var menuBar: MenuBarController?
-    private var startTimer: Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if handOffToRunningInstance() { return }
@@ -25,11 +24,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let model = AppModel(file: file, config: config, configError: error, controller: controller)
         self.model = model
         menuBar = MenuBarController(model: model, presenter: presenter)
+        presenter.onboardingView = { AnyView(OnboardingView(model: model)) }
+        model.onPermissionsMissing = { [presenter] in presenter.showOnboarding() }
+        model.onPermissionsGranted = { [presenter] in presenter.closeOnboarding() }
         model.startWatching()
-
-        _ = AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
-        _ = CGRequestListenEventAccess()
-        if !model.isPaused { startWhenPermitted() }
+        model.startPermissionPolling()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -73,20 +72,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 log.error("couldn't write config: \(error.localizedDescription, privacy: .public)")
             }
             return (config, nil)
-        }
-    }
-
-    /// Retries every second until the event tap can be created (permissions granted).
-    private func startWhenPermitted() {
-        guard let model, !model.controller.start() else { return }
-        startTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated {
-                guard let self, let model = self.model else { return }
-                if model.isPaused || model.controller.start() {
-                    self.startTimer?.invalidate()
-                    self.startTimer = nil
-                }
-            }
         }
     }
 }

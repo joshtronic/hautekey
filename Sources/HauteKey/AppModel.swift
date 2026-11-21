@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import HauteKeyCore
 import os
+import ServiceManagement
 
 /// Something the user should know about, shown in the menu and at the top of Settings.
 enum Problem: Hashable, Identifiable {
@@ -42,12 +43,19 @@ final class AppModel: ObservableObject {
     @Published private(set) var showMenuBarIcon: Bool
     /// Problems found by the problem monitor (everything except config errors).
     @Published var detectedProblems: [Problem] = []
+    @Published private(set) var hasAccessibility = Permissions.accessibility
+    @Published private(set) var hasInputMonitoring = Permissions.inputMonitoring
+
+    /// Called when permissions go missing (at launch or revoked later) and when they're all back.
+    var onPermissionsMissing: () -> Void = {}
+    var onPermissionsGranted: () -> Void = {}
 
     let file: ConfigFile
     let controller: HyperController
     let settings = LocalSettings()
     private let log = Logger(subsystem: "dev.hautekey.app", category: "model")
     private lazy var watcher = ConfigWatcher(file: file) { [unowned self] in reloadFromDisk() }
+    private var permissionTimer: Timer?
 
     init(file: ConfigFile, config: Config, configError: ConfigError?, controller: HyperController) {
         self.file = file
@@ -64,6 +72,44 @@ final class AppModel: ObservableObject {
 
     func startWatching() {
         watcher.start()
+    }
+
+    /// Checks permissions now and then every second: starts the Hyper key once both are
+    /// granted, and puts the keyboard back to normal if either is revoked.
+    func startPermissionPolling() {
+        if !Permissions.allGranted {
+            Permissions.requestAll()
+            onPermissionsMissing()
+        }
+        checkPermissions()
+        permissionTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.checkPermissions() }
+        }
+    }
+
+    private func checkPermissions() {
+        hasAccessibility = Permissions.accessibility
+        hasInputMonitoring = Permissions.inputMonitoring
+        let granted = hasAccessibility && hasInputMonitoring
+
+        if !granted {
+            if controller.isRunning {
+                log.notice("a permission was revoked; stopping")
+                controller.stop()
+                onPermissionsMissing()
+            }
+            return
+        }
+        guard !isPaused, !controller.isRunning, controller.start() else { return }
+        if !settings.onboardingDone {
+            settings.onboardingDone = true
+            do {
+                try SMAppService.mainApp.register()
+            } catch {
+                log.error("couldn't enable launch at login: \(error.localizedDescription, privacy: .public)")
+            }
+        }
+        onPermissionsGranted()
     }
 
     /// Changes the config and saves it. Refused while the file has an error, so the app never
@@ -98,7 +144,7 @@ final class AppModel: ObservableObject {
     func setPaused(_ paused: Bool) {
         isPaused = paused
         settings.isPaused = paused
-        if paused { controller.stop() } else { controller.start() }
+        if paused { controller.stop() } else if Permissions.allGranted { controller.start() }
     }
 
     func setShowMenuBarIcon(_ show: Bool) {
