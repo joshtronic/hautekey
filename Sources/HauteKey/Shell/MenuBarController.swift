@@ -52,8 +52,9 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         if !problems.isEmpty {
             menu.addItem(.separator())
             for problem in problems {
-                let entry = NSMenuItem(title: "⚠︎ " + problem.message, action: nil, keyEquivalent: "")
-                entry.isEnabled = false
+                let entry = NSMenuItem(title: "⚠︎ " + problem.title, action: #selector(openSettings), keyEquivalent: "")
+                entry.target = self
+                entry.toolTip = problem.message
                 menu.addItem(entry)
             }
         }

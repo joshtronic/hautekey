@@ -20,6 +20,16 @@ enum Problem: Hashable, Identifiable {
         }
     }
 
+    /// Short form for the menu bar menu; `message` has the full explanation for Settings.
+    var title: String {
+        switch self {
+        case .configError: "config.json has an error"
+        case .karabinerRunning: "Karabiner-Elements is running"
+        case .secureInput: "Secure keyboard entry is on"
+        case .spotlightShortcutDisabled: "Spotlight's shortcut is off"
+        }
+    }
+
     var message: String {
         switch self {
         case .configError(let message):
