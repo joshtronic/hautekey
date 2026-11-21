@@ -6,66 +6,87 @@ import os
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let log = Logger(subsystem: "dev.hautekey.app", category: "app")
-    private let configFile = ConfigFile(url: ConfigFile.defaultURL)
+    private let presenter = WindowPresenter()
     private let performer = ActionPerformer(
         appLauncher: AppLauncher(), snapper: WindowSnapper(), spotlight: SpotlightLauncher()
     )
-    private var controller: HyperController!
-    private var statusItem: NSStatusItem!
+    private var model: AppModel?
+    private var menuBar: MenuBarController?
     private var startTimer: Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let config = loadOrSeedConfig()
-        controller = HyperController(config: config) { [unowned self] action, config in
+        if handOffToRunningInstance() { return }
+
+        let file = ConfigFile(url: ConfigFile.defaultURL)
+        let (config, error) = loadOrSeedConfig(file)
+        let controller = HyperController(config: config) { [unowned self] action, config in
             performer.perform(action, config: config)
         }
-        setUpMenu()
+        let model = AppModel(file: file, config: config, configError: error, controller: controller)
+        self.model = model
+        menuBar = MenuBarController(model: model, presenter: presenter)
+        model.startWatching()
 
         _ = AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
         _ = CGRequestListenEventAccess()
-        startWhenPermitted()
+        if !model.isPaused { startWhenPermitted() }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        controller.stop()
+        model?.controller.stop()
     }
 
-    private func loadOrSeedConfig() -> Config {
-        switch configFile.load() {
+    /// Opening the app again (Finder, Spotlight, `open`) shows Settings; that's the way in
+    /// when the menu bar icon is hidden.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        presenter.showSettings()
+        return false
+    }
+
+    /// If another copy is already running, ask it to show Settings and quit this one.
+    private func handOffToRunningInstance() -> Bool {
+        let current = NSRunningApplication.current
+        guard let bundleID = Bundle.main.bundleIdentifier,
+              let other = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID)
+                  .first(where: { $0 != current })
+        else { return false }
+        if let url = other.bundleURL {
+            NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())
+        }
+        NSApp.terminate(nil)
+        return true
+    }
+
+    private func loadOrSeedConfig(_ file: ConfigFile) -> (Config, ConfigError?) {
+        switch file.load() {
         case .loaded(let config, _):
-            return config
+            return (config, nil)
         case .failed(let error):
             log.error("config error: \(error.description, privacy: .public)")
-            return Config()
+            return (Config(), error)
         case .missing:
             let dock = UserDefaults(suiteName: "com.apple.dock")?.array(forKey: "persistent-apps") as? [[String: Any]] ?? []
             let config = DockSeeder.defaultConfig(pinnedBundleIDs: DockSeeder.pinnedBundleIDs(persistentApps: dock))
             do {
-                try configFile.save(config)
+                try file.save(config)
             } catch {
                 log.error("couldn't write config: \(error.localizedDescription, privacy: .public)")
             }
-            return config
+            return (config, nil)
         }
     }
 
     /// Retries every second until the event tap can be created (permissions granted).
     private func startWhenPermitted() {
-        if controller.start() { return }
+        guard let model, !model.controller.start() else { return }
         startTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
-                guard let self, self.controller.start() else { return }
-                self.startTimer?.invalidate()
-                self.startTimer = nil
+                guard let self, let model = self.model else { return }
+                if model.isPaused || model.controller.start() {
+                    self.startTimer?.invalidate()
+                    self.startTimer = nil
+                }
             }
         }
-    }
-
-    private func setUpMenu() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "HK"
-        let menu = NSMenu()
-        menu.addItem(withTitle: "Quit Haute Key", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-        statusItem.menu = menu
     }
 }
