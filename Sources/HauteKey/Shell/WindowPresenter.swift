@@ -15,8 +15,13 @@ final class WindowPresenter {
         settingsWindow = show(settingsWindow, title: "Haute Key Settings", content: settingsView)
     }
 
+    /// Floats above other windows (System Settings included) so it stays visible while the
+    /// user flips the switches; a background app can't reliably bring itself to the front.
     func showOnboarding() {
-        onboardingWindow = show(onboardingWindow, title: "Set Up Haute Key", content: onboardingView)
+        let window = show(onboardingWindow, title: "Set Up Haute Key", content: onboardingView)
+        window.level = .floating
+        window.orderFrontRegardless()
+        onboardingWindow = window
     }
 
     func closeOnboarding() {
@@ -37,6 +42,7 @@ final class WindowPresenter {
             return window
         }()
         window.makeKeyAndOrderFront(nil)
+        window.orderFrontRegardless()
         NSApp.activate()
         return window
     }

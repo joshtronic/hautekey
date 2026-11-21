@@ -16,13 +16,15 @@ struct OnboardingView: View {
                 granted: model.hasInputMonitoring,
                 name: "Input Monitoring",
                 reason: "so it can see the Hyper key",
-                url: Permissions.inputMonitoringSettingsURL
+                url: Permissions.inputMonitoringSettingsURL,
+                request: Permissions.requestInputMonitoring
             )
             PermissionRow(
                 granted: model.hasAccessibility,
                 name: "Accessibility",
                 reason: "so it can move windows",
-                url: Permissions.accessibilitySettingsURL
+                url: Permissions.accessibilitySettingsURL,
+                request: Permissions.requestAccessibility
             )
 
             Text("If Haute Key isn't in the list, click + and choose it from your Applications folder.")
@@ -40,6 +42,7 @@ private struct PermissionRow: View {
     let name: String
     let reason: String
     let url: URL
+    let request: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
@@ -52,7 +55,10 @@ private struct PermissionRow: View {
             }
             Spacer()
             if !granted {
-                Button("Open System Settings") { NSWorkspace.shared.open(url) }
+                Button("Open System Settings") {
+                    request()
+                    NSWorkspace.shared.open(url)
+                }
             }
         }
     }

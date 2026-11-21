@@ -11,9 +11,13 @@ enum Permissions {
 
     static var allGranted: Bool { accessibility && inputMonitoring }
 
-    /// Shows macOS's own prompts, which also add the app to both lists in System Settings.
-    static func requestAll() {
+    /// Asking is what adds the app to each list in System Settings. macOS shows its own prompt
+    /// the first time; after that these do nothing, so callers also open the Settings page.
+    static func requestAccessibility() {
         _ = AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
+    }
+
+    static func requestInputMonitoring() {
         _ = CGRequestListenEventAccess()
     }
 

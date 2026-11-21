@@ -88,7 +88,6 @@ final class AppModel: ObservableObject {
     /// granted, and puts the keyboard back to normal if either is revoked.
     func startPermissionPolling() {
         if !Permissions.allGranted {
-            Permissions.requestAll()
             onPermissionsMissing()
         }
         checkPermissions()
