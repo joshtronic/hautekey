@@ -13,6 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     )
     private var model: AppModel?
     private var menuBar: MenuBarController?
+    private var problemMonitor: ProblemMonitor?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if handOffToRunningInstance() { return }
@@ -31,6 +32,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         model.onPermissionsGranted = { [presenter] in presenter.closeOnboarding() }
         model.startWatching()
         model.startPermissionPolling()
+        problemMonitor = ProblemMonitor(model: model, spotlight: spotlight, presenter: presenter)
+        problemMonitor?.start()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
