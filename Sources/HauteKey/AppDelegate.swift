@@ -7,7 +7,9 @@ import os
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let log = Logger(subsystem: "dev.hautekey.app", category: "app")
     private let configFile = ConfigFile(url: ConfigFile.defaultURL)
-    private let spotlight = SpotlightLauncher()
+    private let performer = ActionPerformer(
+        appLauncher: AppLauncher(), snapper: WindowSnapper(), spotlight: SpotlightLauncher()
+    )
     private var controller: HyperController!
     private var statusItem: NSStatusItem!
     private var startTimer: Timer?
@@ -15,7 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         let config = loadOrSeedConfig()
         controller = HyperController(config: config) { [unowned self] action, config in
-            perform(action, config: config)
+            performer.perform(action, config: config)
         }
         setUpMenu()
 
@@ -56,15 +58,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 self.startTimer?.invalidate()
                 self.startTimer = nil
             }
-        }
-    }
-
-    private func perform(_ action: HyperAction, config: Config) {
-        switch (action, config.tapAction) {
-        case (.tap, .spotlight):
-            spotlight.open()
-        default:
-            log.info("action not handled yet: \(String(describing: action), privacy: .public)")
         }
     }
 
