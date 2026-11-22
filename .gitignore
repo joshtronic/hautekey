@@ -4,3 +4,10 @@ build/
 *.p12
 *.pem
 .superpowers/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

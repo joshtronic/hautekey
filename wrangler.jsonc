@@ -1,0 +1,15 @@
+// hautekey.app: the static landing page in site/, served by Cloudflare. Deploy with `npx wrangler deploy`.
+{
+  "name": "hautekey",
+  "compatibility_date": "2026-11-19",
+  "assets": {
+    "directory": "site"
+  },
+  "routes": [
+    { "pattern": "hautekey.app", "custom_domain": true },
+    { "pattern": "www.hautekey.app", "custom_domain": true }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
