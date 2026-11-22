@@ -345,7 +345,7 @@ footer a { color: var(--fog); }
               <b id="menu-app">Finder</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
               <div class="tray">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
-                <span>Fri 9:41 AM</span>
+                <span>Fri 4:13 PM</span>
               </div>
             </div>
             <div class="desk" id="desk" aria-hidden="true">
@@ -388,6 +388,7 @@ footer a { color: var(--fog); }
 
         <div class="keys" aria-hidden="true">
           <div class="krow">
+            <span class="cap" data-cap data-w="1.5" data-legend="command" data-variant="mod" title="Left ⌘ stays a normal ⌘">⌘</span>
             <span class="cap" data-cap data-key="1" data-legend="1">1</span>
             <span class="cap" data-cap data-key="2" data-legend="2">2</span>
             <span class="cap" data-cap data-key="6" data-legend="6">6</span>
@@ -594,7 +595,7 @@ footer a { color: var(--fog); }
   const typed = $('#typed'), ghost = $('#ghost'), press = $('#press'), result = $('#result');
   const menuApp = $('#menu-app'), toggle = $('#playpause');
   const wins = [...desk.querySelectorAll('.win')];
-  const demoKeys = [...document.querySelectorAll('.keys .cap')];
+  const demoKeys = [...document.querySelectorAll('.keys .cap[data-key]')];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const home = {
