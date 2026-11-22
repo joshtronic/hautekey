@@ -15,7 +15,7 @@ final class WindowSnapper {
         let id: UInt
     }
 
-    private let log = Logger(subsystem: "dev.hautekey.app", category: "snap")
+    private let log = Logger(subsystem: "com.joshtronic.hautekey", category: "snap")
     private var memory = RestoreMemory<WindowKey>()
 
     func perform(_ action: SnapAction, restoreSize: RestoreSize) {

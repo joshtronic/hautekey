@@ -63,7 +63,7 @@ final class AppModel: ObservableObject {
     let file: ConfigFile
     let controller: HyperController
     let settings = LocalSettings()
-    private let log = Logger(subsystem: "dev.hautekey.app", category: "model")
+    private let log = Logger(subsystem: "com.joshtronic.hautekey", category: "model")
     private lazy var watcher = ConfigWatcher(file: file) { [unowned self] in reloadFromDisk() }
     private var permissionTimer: Timer?
     /// False while another user's session is in front; the key mapping is system-wide.

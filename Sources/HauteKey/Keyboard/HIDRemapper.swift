@@ -6,7 +6,7 @@ import os
 /// permission. The mapping lasts until it's cleared, the user logs out, or the Mac restarts.
 @MainActor
 final class HIDRemapper {
-    private let log = Logger(subsystem: "dev.hautekey.app", category: "hid")
+    private let log = Logger(subsystem: "com.joshtronic.hautekey", category: "hid")
 
     func apply(hyperKey: HyperKey, capsLockToControl: Bool) {
         set(HIDMapping.hidutilJSON(HIDMapping.pairs(hyperKey: hyperKey, capsLockToControl: capsLockToControl)))

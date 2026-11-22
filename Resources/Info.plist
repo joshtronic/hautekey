@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleIdentifier</key><string>dev.hautekey.app</string>
+    <key>CFBundleIdentifier</key><string>com.joshtronic.hautekey</string>
     <key>CFBundleName</key><string>Haute Key</string>
     <key>CFBundleDisplayName</key><string>Haute Key</string>
     <key>CFBundleExecutable</key><string>HauteKey</string>

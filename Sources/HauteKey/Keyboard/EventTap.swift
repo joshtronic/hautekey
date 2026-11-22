@@ -10,7 +10,7 @@ final class EventTap {
     private let handler: @MainActor (HyperInput) -> HyperDecision
     /// Called when macOS disables the tap; events missed meanwhile (like Hyper's key-up) are lost.
     var onDisabled: @MainActor () -> Void = {}
-    private let log = Logger(subsystem: "dev.hautekey.app", category: "tap")
+    private let log = Logger(subsystem: "com.joshtronic.hautekey", category: "tap")
     private var port: CFMachPort?
     private var source: CFRunLoopSource?
 

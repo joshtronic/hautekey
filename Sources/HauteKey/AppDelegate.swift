@@ -5,7 +5,7 @@ import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private let log = Logger(subsystem: "dev.hautekey.app", category: "app")
+    private let log = Logger(subsystem: "com.joshtronic.hautekey", category: "app")
     private let presenter = WindowPresenter()
     private let spotlight = SpotlightLauncher()
     private lazy var performer = ActionPerformer(
@@ -21,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // the controller re-applies the mapping once it's actually running.
         HIDRemapper().clear()
         handleTerminationSignals()
+        LocalSettings.migrateFromLegacyDomain()
 
         let file = ConfigFile(url: ConfigFile.defaultURL)
         let (config, error) = loadOrSeedConfig(file)

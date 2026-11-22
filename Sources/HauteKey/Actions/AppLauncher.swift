@@ -5,7 +5,7 @@ import os
 /// forward, and sends a reopen so apps with no open windows make one. Never hides anything.
 @MainActor
 final class AppLauncher {
-    private let log = Logger(subsystem: "dev.hautekey.app", category: "launch")
+    private let log = Logger(subsystem: "com.joshtronic.hautekey", category: "launch")
 
     func isInstalled(bundleID: String) -> Bool {
         NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) != nil
