@@ -107,6 +107,10 @@ that only make sense on one Mac, like launch at login and the menu bar icon, are
   "bindings" : {
     "1" : { "app" : "org.alacritty" },
     "2" : { "app" : "org.mozilla.firefox" },
+    "3" : { "app" : "com.apple.MobileSMS" },
+    "4" : { "app" : "com.apple.Notes" },
+    "5" : { "app" : "com.apple.reminders" },
+    "6" : { "app" : "com.apple.Music" },
     "a" : { "snap" : "leftHalf" },
     "d" : { "snap" : "rightHalf" },
     "s" : { "snap" : "restore" },

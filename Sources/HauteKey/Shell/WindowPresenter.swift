@@ -40,7 +40,10 @@ final class WindowPresenter {
         let window = existing ?? {
             let window = NSWindow(contentViewController: NSHostingController(rootView: content()))
             window.title = title
-            window.styleMask = [.titled, .closable, .miniaturizable]
+            window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+            // Open tall enough to show the shortcuts, capped to the screen; the user can resize.
+            let screenHeight = NSScreen.main?.visibleFrame.height ?? 800
+            window.setContentSize(NSSize(width: window.frame.width, height: min(760, screenHeight - 80)))
             window.isReleasedWhenClosed = false
             window.center()
             return window

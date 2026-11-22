@@ -42,7 +42,7 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .sheet(isPresented: $isEditingRaw) { RawConfigEditor(model: model) }
         .frame(width: 480)
-        .frame(minHeight: 420, idealHeight: 640)
+        .frame(minHeight: 420)
     }
 
     // MARK: - Sections
