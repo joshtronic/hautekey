@@ -1,12 +1,41 @@
-# Haute Key
+<p align="center">
+  <img src="docs/icon.png" width="128" height="128" alt="Haute Key icon: a charcoal keycap with a gold-stitched ⌘">
+</p>
 
-A Hyper key for your Mac.
+<h1 align="center">Haute Key</h1>
 
-- **Tap** the Hyper key (right ⌘ by default) to open Spotlight.
-- **Hyper + 0–9 / A–Z** opens an app or snaps the front window.
-- Default snaps: **W** maximize, **A** left half, **D** right half, **S** restore.
+<p align="center">
+  <strong>A Hyper key for your Mac.</strong><br>
+  Tap right ⌘ for Spotlight. Hold it to jump to apps and snap windows.
+</p>
 
-One small menu bar app. No Karabiner, no kernel extensions, no subscription.
+<p align="center">
+  <img src="https://img.shields.io/badge/macOS-15%2B-1d1b22?logo=apple&logoColor=white" alt="macOS 15+">
+  <img src="https://img.shields.io/badge/license-GPL--3.0-b8893a" alt="GPL-3.0">
+  <a href="https://github.com/sponsors/joshtronic"><img src="https://img.shields.io/badge/sponsor-%E2%99%A5-8e2b34" alt="Sponsor"></a>
+</p>
+
+---
+
+Haute Key turns one key, right ⌘ by default, into a GNOME-style Super key. It's one small
+menu bar app: no Karabiner, no kernel extensions, no subscription.
+
+| Press | Does |
+|---|---|
+| **Hyper** (tap) | Opens Spotlight |
+| **Hyper + 1–9, 0** | Opens or switches to an app. On first launch, these follow the apps pinned in your Dock. |
+| **Hyper + W** | Maximizes the front window |
+| **Hyper + A** / **D** | Snaps it to the left or right half |
+| **Hyper + S** | Restores its size from before you snapped it |
+| **Caps Lock** | Acts as Control, if you turn it on |
+
+Every key from 0–9 and A–Z can open an app or snap a window. The tap can open Spotlight, any
+app (Raycast and Alfred work too), or press a shortcut of your choice. The Hyper key can be
+right ⌘, right ⌥, right ⌃, or Caps Lock.
+
+<p align="center">
+  <img src="docs/settings.png" width="480" alt="Haute Key's Settings window: Hyper key, tap action, caps lock, and app shortcuts">
+</p>
 
 ## Why this exists
 
@@ -38,62 +67,88 @@ That last setup worked, but it took two apps, and Raycast was doing very little.
 a launcher with extensions. Spotlight is closer to how GNOME's search works anyway. Then Raycast
 put window snapping behind a subscription, so I was paying yearly for a few hotkeys.
 
-Haute Key is that whole setup in one app: the right ⌘ key as Super, Spotlight on tap, apps on
-numbers, and windows on WASD. No Karabiner, no Hammerspoon, no subscription.
+Haute Key is that whole setup in one app.
 
-## Requirements
+## Install
 
-- macOS 15 or later
-- Xcode installed and selected (`sudo xcode-select -s /Applications/Xcode.app`)
+Signed downloads are coming. For now, build it from source.
 
-## Setup (once)
-
-```sh
-scripts/create-dev-cert.sh
-```
-
-This creates a local "Haute Key Dev" code-signing certificate, so macOS keeps the app's
-permissions when you rebuild. macOS asks for your password to trust it.
-
-## Build and install
+**You need** macOS 15 or later, and Xcode installed and selected
+(`sudo xcode-select -s /Applications/Xcode.app`).
 
 ```sh
-scripts/build-app.sh --open
+git clone https://github.com/joshtronic/hautekey.git
+cd hautekey
+scripts/create-dev-cert.sh     # once: a local signing certificate, so permissions survive rebuilds
+scripts/build-app.sh --open    # builds, signs, installs ~/Applications/Haute Key.app, and launches it
 ```
 
-This builds, signs, and installs `~/Applications/Haute Key.app`, then launches it.
+The first time it runs, Haute Key walks you through two permissions in **System Settings →
+Privacy & Security**:
 
-Run the tests with `swift test`.
+- **Input Monitoring**, so it can see the Hyper key.
+- **Accessibility**, so it can move windows.
 
-The app icon's source is `Resources/AppIcon.svg`. After editing it, run `scripts/make-icon.sh`
-(needs `brew install librsvg`) to regenerate `Resources/AppIcon.icns`.
-
-## Permissions
-
-Haute Key needs two permissions in **System Settings → Privacy & Security**:
-
-- **Input Monitoring:** to see the Hyper key.
-- **Accessibility:** to move windows.
-
-If Haute Key isn't in a list, click **+** and choose it from `~/Applications`.
+If Haute Key isn't in a list, click **+** and choose it from `~/Applications`. It starts
+working as soon as both are on, with no restart, and it launches at login from then on.
 
 ## Configuration
 
-Settings live in `~/.config/hautekey/config.json`. You can edit them in the app or by hand,
-and changes apply live. The file can be a symlink, for example into your dotfiles.
+Use **Settings…** in the menu bar, or open the app again to bring Settings back if you've
+hidden the icon.
+
+Your shortcuts are saved to `~/.config/hautekey/config.json` and apply as soon as the file
+changes, whether you edit it in Settings, in the built-in editor, or in your own editor. The
+file can be a symlink, so it's easy to keep in your dotfiles and share between Macs. Settings
+that only make sense on one Mac, like launch at login and the menu bar icon, aren't stored in it.
+
+```json
+{
+  "bindings" : {
+    "1" : { "app" : "org.alacritty" },
+    "2" : { "app" : "org.mozilla.firefox" },
+    "a" : { "snap" : "leftHalf" },
+    "d" : { "snap" : "rightHalf" },
+    "s" : { "snap" : "restore" },
+    "w" : { "snap" : "maximize" }
+  },
+  "capsLockToControl" : true,
+  "hyperKey" : "rightCommand",
+  "restoreSize" : { "height" : 0.6, "width" : 0.6 },
+  "tapAction" : { "type" : "spotlight" },
+  "version" : 1
+}
+```
+
+## Good to know
+
+- **Karabiner-Elements:** quit it before using Haute Key, or it grabs the keyboard first.
+  Haute Key warns you in its menu if Karabiner is running.
+- **Secure input:** while a password field or Terminal's Secure Keyboard Entry is active, macOS
+  hides key presses from every app, so the Hyper key does nothing until it's off.
+- **Your own `hidutil` remaps:** Haute Key sets the system's key mapping itself, which replaces
+  any mapping you made with `hidutil`. Quitting Haute Key clears it.
+- **Window snapping** goes to exact halves of the screen, with no gaps, and never moves a
+  window to another display.
+
+## Development
+
+```sh
+swift test                  # core logic: config, tap/hold, snap math
+scripts/build-app.sh        # build, sign, and install without launching
+scripts/make-icon.sh        # regenerate Resources/AppIcon.icns from AppIcon.svg (needs librsvg)
+```
 
 ## Uninstall
 
-Quit Haute Key, delete the app, and reset the key mapping (quitting already does this):
-
-```sh
-hidutil property --set '{"UserKeyMapping":[]}'
-```
+Quit Haute Key (that clears its key mapping) and delete `~/Applications/Haute Key.app`. To
+remove your settings as well, delete `~/.config/hautekey`.
 
 ## Support
 
 Haute Key is free and always will be. If it saves you a subscription, you can
-[sponsor me on GitHub](https://github.com/sponsors/joshtronic). Totally optional, and much appreciated.
+[sponsor me on GitHub](https://github.com/sponsors/joshtronic). Totally optional, and much
+appreciated.
 
 ## License
 
