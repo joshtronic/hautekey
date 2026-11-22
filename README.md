@@ -65,6 +65,9 @@ This builds, signs, and installs `~/Applications/Haute Key.app`, then launches i
 
 Run the tests with `swift test`.
 
+The app icon's source is `Resources/AppIcon.svg`. After editing it, run `scripts/make-icon.sh`
+(needs `brew install librsvg`) to regenerate `Resources/AppIcon.icns`.
+
 ## Permissions
 
 Haute Key needs two permissions in **System Settings → Privacy & Security**:

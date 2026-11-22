@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Haute Key app icon: a charcoal keycap with a gold-stitched ⌘. Apple 1024 grid (824 artwork, 100 margin). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#55585f"/><stop offset="1" stop-color="#1e1f23"/>
+    </linearGradient>
+    <radialGradient id="dish" cx="0.5" cy="0.42" r="0.72">
+      <stop offset="0" stop-color="#3a3c42"/><stop offset="0.7" stop-color="#45484f"/><stop offset="1" stop-color="#52555c"/>
+    </radialGradient>
+    <filter id="wool" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .07 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+    <filter id="drop" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity=".3"/>
+    </filter>
+  </defs>
+  <path d="M100,322 C100,170 170,100 322,100 L702,100 C854,100 924,170 924,322 L924,702 C924,854 854,924 702,924 L322,924 C170,924 100,854 100,702 Z" fill="url(#edge)" filter="url(#drop)"/>
+  <path d="M130,335.8349514563107 C130,194.90291262135923 194.90291262135923,130 335.8349514563107,130 L688.1650485436893,130 C829.0970873786408,130 894,194.90291262135923 894,335.8349514563107 L894,688.1650485436893 C894,829.0970873786408 829.0970873786408,894 688.1650485436893,894 L335.8349514563107,894 C194.90291262135923,894 130,829.0970873786408 130,688.1650485436893 Z" transform="translate(0 -10)" fill="url(#dish)"/>
+  <path d="M130,335.8349514563107 C130,194.90291262135923 194.90291262135923,130 335.8349514563107,130 L688.1650485436893,130 C829.0970873786408,130 894,194.90291262135923 894,335.8349514563107 L894,688.1650485436893 C894,829.0970873786408 829.0970873786408,894 688.1650485436893,894 L335.8349514563107,894 C194.90291262135923,894 130,829.0970873786408 130,688.1650485436893 Z" transform="translate(0 -10)" fill="#000" filter="url(#wool)"/>
+  <path d="M130,335.8349514563107 C130,194.90291262135923 194.90291262135923,130 335.8349514563107,130 L688.1650485436893,130 C829.0970873786408,130 894,194.90291262135923 894,335.8349514563107 L894,688.1650485436893 C894,829.0970873786408 829.0970873786408,894 688.1650485436893,894 L335.8349514563107,894 C194.90291262135923,894 130,829.0970873786408 130,688.1650485436893 Z" transform="translate(0 -10)" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="4"/>
+  
+  <g transform="translate(646 636)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.200000000000003 18.7">
+    <path d="M-35.72,-35.72 L35.72,-35.72 L35.72,35.72 L-35.72,35.72 Z" stroke="rgb(0,0,0)" stroke-opacity=".45" stroke-width="11" transform="translate(0 3.8499999999999996)"/>
+    <path d="M-35.72,-35.72 L35.72,-35.72 L35.72,35.72 L-35.72,35.72 Z" stroke="#d9a94f" stroke-width="11"/>
+    <path d="M-35.72,-35.72 L35.72,-35.72 L35.72,35.72 L-35.72,35.72 Z" stroke="#f3d593" stroke-width="3.8499999999999996" transform="translate(-1.3199999999999998 -1.98)"/>
+  </g>
+  <g transform="translate(646 636)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.200000000000003 18.7">
+    <path d="M-35.72,-35.72 L-35.72,-76.14 A40.42,40.42 0 1 0 -76.14,-35.72 L-35.72,-35.72" stroke="rgb(0,0,0)" stroke-opacity=".45" stroke-width="11" transform="translate(0 3.8499999999999996)"/>
+    <path d="M-35.72,-35.72 L-35.72,-76.14 A40.42,40.42 0 1 0 -76.14,-35.72 L-35.72,-35.72" stroke="#d9a94f" stroke-width="11"/>
+    <path d="M-35.72,-35.72 L-35.72,-76.14 A40.42,40.42 0 1 0 -76.14,-35.72 L-35.72,-35.72" stroke="#f3d593" stroke-width="3.8499999999999996" transform="translate(-1.3199999999999998 -1.98)"/>
+  </g>
+  <g transform="translate(646 636)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.200000000000003 18.7">
+    <path d="M35.72,-35.72 L76.14,-35.72 A40.42,40.42 0 1 0 35.72,-76.14 L35.72,-35.72" stroke="rgb(0,0,0)" stroke-opacity=".45" stroke-width="11" transform="translate(0 3.8499999999999996)"/>
+    <path d="M35.72,-35.72 L76.14,-35.72 A40.42,40.42 0 1 0 35.72,-76.14 L35.72,-35.72" stroke="#d9a94f" stroke-width="11"/>
+    <path d="M35.72,-35.72 L76.14,-35.72 A40.42,40.42 0 1 0 35.72,-76.14 L35.72,-35.72" stroke="#f3d593" stroke-width="3.8499999999999996" transform="translate(-1.3199999999999998 -1.98)"/>
+  </g>
+  <g transform="translate(646 636)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.200000000000003 18.7">
+    <path d="M35.72,35.72 L35.72,76.14 A40.42,40.42 0 1 0 76.14,35.72 L35.72,35.72" stroke="rgb(0,0,0)" stroke-opacity=".45" stroke-width="11" transform="translate(0 3.8499999999999996)"/>
+    <path d="M35.72,35.72 L35.72,76.14 A40.42,40.42 0 1 0 76.14,35.72 L35.72,35.72" stroke="#d9a94f" stroke-width="11"/>
+    <path d="M35.72,35.72 L35.72,76.14 A40.42,40.42 0 1 0 76.14,35.72 L35.72,35.72" stroke="#f3d593" stroke-width="3.8499999999999996" transform="translate(-1.3199999999999998 -1.98)"/>
+  </g>
+  <g transform="translate(646 636)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.200000000000003 18.7">
+    <path d="M-35.72,35.72 L-76.14,35.72 A40.42,40.42 0 1 0 -35.72,76.14 L-35.72,35.72" stroke="rgb(0,0,0)" stroke-opacity=".45" stroke-width="11" transform="translate(0 3.8499999999999996)"/>
+    <path d="M-35.72,35.72 L-76.14,35.72 A40.42,40.42 0 1 0 -35.72,76.14 L-35.72,35.72" stroke="#d9a94f" stroke-width="11"/>
+    <path d="M-35.72,35.72 L-76.14,35.72 A40.42,40.42 0 1 0 -35.72,76.14 L-35.72,35.72" stroke="#f3d593" stroke-width="3.8499999999999996" transform="translate(-1.3199999999999998 -1.98)"/>
+  </g>
+</svg>
