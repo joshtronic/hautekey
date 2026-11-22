@@ -5,8 +5,8 @@
 <h1 align="center">Haute Key</h1>
 
 <p align="center">
-  <strong>A Hyper key for your Mac.</strong><br>
-  Tap right ⌘ for Spotlight. Hold it to jump to apps and snap windows.
+  <strong>The hautest key on your Mac.</strong><br>
+  A Hyper key for macOS: tap right ⌘ for Spotlight, hold it to jump to apps and snap windows.
 </p>
 
 <p align="center">
