@@ -41,19 +41,22 @@ final class ProblemMonitor {
         if found != model.detectedProblems { model.detectedProblems = found }
     }
 
+    /// Karabiner's system daemon keeps running even after Karabiner is quit, so it isn't a
+    /// signal. Karabiner is only active when its per-user agents are loaded.
     private func isKarabinerRunning() -> Bool {
         if NSWorkspace.shared.runningApplications.contains(where: { $0.bundleIdentifier?.hasPrefix("org.pqrs.") == true }) {
             return true
         }
-        // The core service is a daemon, not an NSRunningApplication.
-        let pgrep = Process()
-        pgrep.executableURL = URL(fileURLWithPath: "/usr/bin/pgrep")
-        pgrep.arguments = ["-x", "Karabiner-Core-Service"]
-        pgrep.standardOutput = FileHandle.nullDevice
-        pgrep.standardError = FileHandle.nullDevice
-        guard (try? pgrep.run()) != nil else { return false }
-        pgrep.waitUntilExit()
-        return pgrep.terminationStatus == 0
+        let launchctl = Process()
+        let output = Pipe()
+        launchctl.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        launchctl.arguments = ["list"]
+        launchctl.standardOutput = output
+        launchctl.standardError = FileHandle.nullDevice
+        guard (try? launchctl.run()) != nil else { return false }
+        let data = output.fileHandleForReading.readDataToEndOfFile()
+        launchctl.waitUntilExit()
+        return String(decoding: data, as: UTF8.self).contains("org.pqrs.service.agent.")
     }
 
     /// With the icon hidden, open Settings once for each new problem. Secure input is left out:

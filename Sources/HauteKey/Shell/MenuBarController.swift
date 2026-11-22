@@ -46,8 +46,9 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         if !problems.isEmpty {
             menu.addItem(.separator())
             for problem in problems {
-                let entry = NSMenuItem(title: "⚠︎ " + problem.title, action: #selector(openSettings), keyEquivalent: "")
+                let entry = NSMenuItem(title: problem.title, action: #selector(openSettings), keyEquivalent: "")
                 entry.target = self
+                entry.image = NSImage(systemSymbolName: "exclamationmark.triangle.fill", accessibilityDescription: "Warning")
                 entry.toolTip = problem.message
                 menu.addItem(entry)
             }
@@ -60,6 +61,9 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     private func add(to menu: NSMenu, _ title: String, _ action: Selector, key: String = "", target: AnyObject? = nil) {
         let entry = NSMenuItem(title: title, action: action, keyEquivalent: key)
         entry.target = target ?? self
+        // macOS 26 adds icons to common menu items; setting a real image and then nil opts out.
+        entry.image = NSImage()
+        entry.image = nil
         menu.addItem(entry)
     }
 

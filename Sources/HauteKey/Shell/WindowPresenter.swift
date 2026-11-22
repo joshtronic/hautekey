@@ -11,7 +11,11 @@ final class WindowPresenter {
     private var settingsWindow: NSWindow?
     private var onboardingWindow: NSWindow?
 
+    /// A fresh view each time the window opens, so it starts scrolled to the top.
     func showSettings() {
+        if let window = settingsWindow, !window.isVisible {
+            window.contentViewController = NSHostingController(rootView: settingsView())
+        }
         settingsWindow = show(settingsWindow, title: "Haute Key Settings", content: settingsView)
     }
 
