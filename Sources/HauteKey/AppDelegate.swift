@@ -17,6 +17,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if handOffToRunningInstance() { return }
+        // A crash or kill can leave the key remapped with nothing catching it. Start clean;
+        // the controller re-applies the mapping once it's actually running.
+        HIDRemapper().clear()
+        handleTerminationSignals()
 
         let file = ConfigFile(url: ConfigFile.defaultURL)
         let (config, error) = loadOrSeedConfig(file)
@@ -34,6 +38,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         model.startPermissionPolling()
         problemMonitor = ProblemMonitor(model: model, spotlight: spotlight, presenter: presenter)
         problemMonitor?.start()
+
+        let workspace = NSWorkspace.shared.notificationCenter
+        workspace.addObserver(forName: NSWorkspace.sessionDidResignActiveNotification, object: nil, queue: .main) { [weak model] _ in
+            MainActor.assumeIsolated { model?.setSessionActive(false) }
+        }
+        workspace.addObserver(forName: NSWorkspace.sessionDidBecomeActiveNotification, object: nil, queue: .main) { [weak model] _ in
+            MainActor.assumeIsolated { model?.setSessionActive(true) }
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -45,6 +57,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         presenter.showSettings()
         return false
+    }
+
+    /// SIGTERM (`kill`, `pkill`, logout) skips applicationWillTerminate by default, which would
+    /// leave the key remapped. Route these signals through a normal quit instead.
+    private var signalSources: [DispatchSourceSignal] = []
+
+    private func handleTerminationSignals() {
+        for sig in [SIGTERM, SIGINT, SIGHUP] {
+            signal(sig, SIG_IGN)
+            let source = DispatchSource.makeSignalSource(signal: sig, queue: .main)
+            source.setEventHandler { NSApp.terminate(nil) }
+            source.resume()
+            signalSources.append(source)
+        }
     }
 
     /// If another copy is already running, ask it to show Settings and quit this one.

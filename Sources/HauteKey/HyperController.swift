@@ -9,7 +9,12 @@ final class HyperController {
     private let perform: @MainActor (HyperAction, Config) -> Void
     private var machine = HyperStateMachine()
     private let remapper = HIDRemapper()
-    private lazy var tap = EventTap { [unowned self] input in handle(input) }
+    private lazy var tap: EventTap = {
+        let tap = EventTap { [unowned self] input in handle(input) }
+        // A missed Hyper key-up would leave Hyper "held" and swallow all typing.
+        tap.onDisabled = { [unowned self] in machine.reset() }
+        return tap
+    }()
     private lazy var watcher = KeyboardWatcher { [unowned self] in applyMapping() }
 
     private(set) var isRunning = false

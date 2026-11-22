@@ -35,11 +35,12 @@ public enum ConfigCodec {
 
         var config = Config()
         if let value = root["version"] {
-            guard case .number(let n) = value, n == Double(Int(n)) else {
-                throw .invalid(field: "version", message: "must be a whole number")
+            // Int(exactly:) instead of Int(_:), which traps on huge values like 1e20.
+            guard case .number(let n) = value, let version = Int(exactly: n), version >= 1 else {
+                throw .invalid(field: "version", message: "must be a whole number starting at 1")
             }
-            guard Int(n) <= supportedVersion else {
-                throw .invalid(field: "version", message: "\(Int(n)) is newer than this app supports (\(supportedVersion))")
+            guard version <= supportedVersion else {
+                throw .invalid(field: "version", message: "\(version) is newer than this app supports (\(supportedVersion))")
             }
             config.version = supportedVersion
         }
@@ -134,6 +135,10 @@ public enum ConfigCodec {
         case "keys":
             guard case .number(let code)? = object["keyCode"], code >= 0, code <= 127, code == code.rounded() else {
                 throw .invalid(field: "tapAction.keyCode", message: "must be a key code from 0 to 127")
+            }
+            guard UInt16(code) != KeyCodes.f18 else {
+                // The Hyper key is F18 internally; sending it would trigger the tap again, forever.
+                throw .invalid(field: "tapAction.keyCode", message: "can't be the Hyper key itself")
             }
             var modifiers = Set<KeyModifier>()
             if let raw = object["modifiers"] {

@@ -17,6 +17,9 @@ cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 
 codesign --force --options runtime --sign "Haute Key Dev" --identifier dev.hautekey.app "$APP"
 
+# Quit gracefully so the app clears its key mapping; pkill is the fallback.
+osascript -e 'quit app id "dev.hautekey.app"' 2>/dev/null || true
+for _ in 1 2 3 4 5 6 7 8 9 10; do pgrep -x HauteKey >/dev/null || break; sleep 0.3; done
 pkill -x HauteKey || true
 mkdir -p "$HOME/Applications"
 rm -rf "$DEST"

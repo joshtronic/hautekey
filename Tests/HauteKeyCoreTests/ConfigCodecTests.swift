@@ -132,3 +132,12 @@ func invalidValuesNameTheField(json: String, field: String) {
     #expect(BindableKey.all[9].rawValue == "0")
     #expect(BindableKey.all.last?.rawValue == "z")
 }
+
+@Test(arguments: [#"{"version":1e20}"#, #"{"version":-1e20}"#, #"{"version":0}"#, #"{"version":1.5}"#])
+func outOfRangeVersionIsInvalidNotACrash(json: String) {
+    #expect(invalidField(json) == "version")
+}
+
+@Test func tapShortcutCannotBeTheHyperKeyItself() {
+    #expect(invalidField(#"{"tapAction":{"type":"keys","keyCode":79,"modifiers":[]}}"#) == "tapAction.keyCode")
+}

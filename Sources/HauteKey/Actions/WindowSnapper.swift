@@ -45,6 +45,8 @@ final class WindowSnapper {
 
     private func focusedWindow(of pid: pid_t) -> AXUIElement? {
         let app = AXUIElementCreateApplication(pid)
+        // A hung app would otherwise block this (main) thread, and with it all key input, for ~6 s.
+        AXUIElementSetMessagingTimeout(app, 0.5)
         var value: CFTypeRef?
         let error = AXUIElementCopyAttributeValue(app, kAXFocusedWindowAttribute as CFString, &value)
         guard error == .success, let value, CFGetTypeID(value) == AXUIElementGetTypeID() else {

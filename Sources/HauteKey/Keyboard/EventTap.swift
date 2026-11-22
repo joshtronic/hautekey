@@ -8,6 +8,8 @@ import os
 @MainActor
 final class EventTap {
     private let handler: @MainActor (HyperInput) -> HyperDecision
+    /// Called when macOS disables the tap; events missed meanwhile (like Hyper's key-up) are lost.
+    var onDisabled: @MainActor () -> Void = {}
     private let log = Logger(subsystem: "dev.hautekey.app", category: "tap")
     private var port: CFMachPort?
     private var source: CFRunLoopSource?
@@ -64,6 +66,7 @@ final class EventTap {
         switch type {
         case .tapDisabledByTimeout, .tapDisabledByUserInput:
             log.notice("event tap was disabled (\(type.rawValue)); re-enabling")
+            onDisabled()
             if let port { CGEvent.tapEnable(tap: port, enable: true) }
             return false
         case .keyDown where keyCode == KeyCodes.f18:

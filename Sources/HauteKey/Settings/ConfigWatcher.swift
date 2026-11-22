@@ -9,7 +9,7 @@ final class ConfigWatcher {
     private let onChange: @MainActor () -> Void
     private var sources: [DispatchSourceFileSystemObject] = []
     private var pending: DispatchWorkItem?
-    private var lastOwnWrite: Data?
+    private var ownWrites = OwnWriteFilter()
 
     init(file: ConfigFile, onChange: @escaping @MainActor () -> Void) {
         self.file = file
@@ -28,7 +28,7 @@ final class ConfigWatcher {
 
     /// Tells the watcher about a save the app made itself, so it doesn't reload its own write.
     func noteOwnWrite(_ data: Data) {
-        lastOwnWrite = data
+        ownWrites.noteOwnWrite(data)
     }
 
     private func arm() {
@@ -64,7 +64,7 @@ final class ConfigWatcher {
 
     private func settle() {
         arm()  // The file may have been replaced; watch the new one.
-        if let data = try? Data(contentsOf: file.resolvedURL()), data == lastOwnWrite { return }
+        if let data = try? Data(contentsOf: file.resolvedURL()), ownWrites.shouldIgnore(data) { return }
         onChange()
     }
 }

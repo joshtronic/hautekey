@@ -66,6 +66,8 @@ final class AppModel: ObservableObject {
     private let log = Logger(subsystem: "dev.hautekey.app", category: "model")
     private lazy var watcher = ConfigWatcher(file: file) { [unowned self] in reloadFromDisk() }
     private var permissionTimer: Timer?
+    /// False while another user's session is in front; the key mapping is system-wide.
+    private var isSessionActive = true
 
     init(file: ConfigFile, config: Config, configError: ConfigError?, controller: HyperController) {
         self.file = file
@@ -108,7 +110,7 @@ final class AppModel: ObservableObject {
             }
             return
         }
-        guard !controller.isRunning, controller.start() else { return }
+        guard isSessionActive, !controller.isRunning, controller.start() else { return }
         if !settings.onboardingDone {
             settings.onboardingDone = true
             do {
@@ -172,6 +174,13 @@ final class AppModel: ObservableObject {
 
     func revealConfigFile() {
         NSWorkspace.shared.activateFileViewerSelecting([file.resolvedURL()])
+    }
+
+    /// Fast user switching: the HID mapping is system-wide, so give the keyboard back while
+    /// another user is active, and pick up again on return.
+    func setSessionActive(_ active: Bool) {
+        isSessionActive = active
+        if active { checkPermissions() } else { controller.stop() }
     }
 
     func setShowMenuBarIcon(_ show: Bool) {
