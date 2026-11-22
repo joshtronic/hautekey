@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Haute Key</title>
-<meta name="description" content="The hautest key on your Mac. A free Hyper key for macOS: tap right ⌘ for Spotlight, hold it to open apps and snap windows.">
+<meta name="description" content="The fastest way to switch between apps on a Mac. Haute Key is a free Hyper key for macOS: tap right ⌘ for Spotlight, hold it to open apps and snap windows.">
 <meta property="og:title" content="Haute Key">
-<meta property="og:description" content="The hautest key on your Mac. Tap right ⌘ for Spotlight, hold it to open apps and snap windows.">
+<meta property="og:description" content="The fastest way to switch between apps on a Mac. Tap right ⌘ for Spotlight, hold it to open apps and snap windows.">
 <meta property="og:image" content="https://hautekey.app/og.png">
 <meta property="og:url" content="https://hautekey.app/">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@ h1 {
 .keys { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: 10px 26px; }
 .krow { display: flex; gap: 9px; align-items: end; }
 .keys .cap { cursor: pointer; }
-.readout { min-height: 1.8em; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 18px; color: var(--fog); }
+.readout { min-height: 1.8em; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 20px; color: var(--fog); }
 .readout .press { color: var(--gold-light); font-weight: 700; font-stretch: 112%; }
 .readout .result { color: var(--chalk); }
 .readout svg { width: 18px; }
@@ -331,7 +331,7 @@ footer a { color: var(--fog); }
     <section class="hero" aria-labelledby="title">
       <h1 id="title">The hautest key<br class="wide-br"> on your Mac.</h1>
       <div>
-        <p class="lede"><strong>A Hyper key for macOS.</strong> Tap right ⌘ for Spotlight. Hold it with a number to open an app, or with W, A, S, or D to snap the window. One small app instead of Karabiner and Raycast.</p>
+        <p class="lede"><strong>The fastest way to switch between apps.</strong> Haute Key turns your Mac's right ⌘ into a Hyper key: tap it for Spotlight, hold it with a number to open an app, or with W, A, S, or D to snap the window. One small app instead of Karabiner and Raycast.</p>
         <div class="get">
           <a class="cta" href="#get"><span class="cap" data-cap data-w="3.5" data-variant="accent" aria-hidden="true"></span><span class="label">Get Haute Key</span></a>
           <small>Pay what you want. Free and open source.</small>
@@ -383,20 +383,6 @@ footer a { color: var(--fog); }
           </div>
         </div>
 
-        <div class="keys" aria-hidden="true">
-          <div class="krow">
-            <span class="cap" data-cap data-key="1" data-legend="1">1</span>
-            <span class="cap" data-cap data-key="2" data-legend="2">2</span>
-            <span class="cap" data-cap data-key="6" data-legend="6">6</span>
-          </div>
-          <div class="krow">
-            <span class="cap" data-cap data-key="w" data-legend="W">W</span>
-            <span class="cap" data-cap data-key="a" data-legend="A">A</span>
-            <span class="cap" data-cap data-key="s" data-legend="S">S</span>
-            <span class="cap" data-cap data-key="d" data-legend="D">D</span>
-            <span class="cap" data-cap data-key="hyper" data-w="1.75" data-variant="hyper">⌘</span>
-          </div>
-        </div>
         <div class="readout" aria-live="polite">
           <span class="press" id="press">⌘</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -699,16 +685,6 @@ footer a { color: var(--fog); }
   }
   toggle.addEventListener('click', () => setPlaying(!playing));
 
-  // Click the keys to drive it yourself (pauses the loop).
-  demoKeys.forEach(cap => cap.addEventListener('click', async () => {
-    setPlaying(false);
-    const k = cap.dataset.key;
-    keyDown(k === 'hyper' ? ['hyper'] : ['hyper', k]);
-    setTimeout(keyUp, 180);
-    if (k === 'hyper') { say('⌘', '…'); say('⌘', await spotlight()); }
-    else if (/\d/.test(k)) say('⌘ + ' + k, openApp(+k) + ' to the front');
-    else { snap(k); say('⌘ + ' + k.toUpperCase(), { a: 'Left half', d: 'Right half', w: 'Maximize', s: 'Restore' }[k]); }
-  }));
 
   // ?frame=spotlight|launch|snap|music freezes the demo on one finished result (for screenshots).
   const frame = new URLSearchParams(location.search).get('frame');
