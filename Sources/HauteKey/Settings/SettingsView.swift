@@ -16,103 +16,108 @@ struct SettingsView: View {
     ]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                problemBanner
-                Group {
-                    keyboardSection
-                    bindingsSection
-                    restoreSection
+        Form {
+            if !model.problems.isEmpty {
+                Section {
+                    ForEach(model.problems) { problem in
+                        Label(problem.message, systemImage: "exclamationmark.triangle.fill")
+                            .symbolRenderingMode(.multicolor)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
-                .disabled(model.configError != nil)
-                thisMacSection
             }
-            .padding(24)
+            Group {
+                keyboardSection
+                shortcutsSection
+                restoreSection
+            }
+            .disabled(model.configError != nil)
+            thisMacSection
         }
-        .frame(width: 560, height: 680)
+        .formStyle(.grouped)
+        .frame(width: 480)
+        .frame(minHeight: 420, idealHeight: 640)
     }
 
     // MARK: - Sections
 
-    @ViewBuilder private var problemBanner: some View {
-        if !model.problems.isEmpty {
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(model.problems) { problem in
-                    Label(problem.message, systemImage: "exclamationmark.triangle.fill")
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            .padding(12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.yellow.opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
-        }
-    }
-
     private var keyboardSection: some View {
-        section("Keyboard") {
+        Section("Keyboard") {
             Picker("Hyper key", selection: edit(\.hyperKey)) {
                 ForEach(HyperKey.allCases, id: \.self) { key in
                     Text(Self.hyperKeyNames[key]!).tag(key)
                 }
             }
 
-            HStack {
-                Picker("Tap Hyper to", selection: tapKind) {
-                    Text("Open Spotlight").tag(TapKind.spotlight)
-                    Text("Open an app…").tag(TapKind.app)
-                    Text("Press a shortcut").tag(TapKind.keys)
-                }
-                tapDetail
+            Picker("Tap Hyper to", selection: tapKind) {
+                Text("Open Spotlight").tag(TapKind.spotlight)
+                Text("Open an app").tag(TapKind.app)
+                Text("Press a shortcut").tag(TapKind.keys)
             }
-            if case .spotlight = model.config.tapAction, spotlight.currentShortcut() == .disabled {
-                Text("Spotlight's shortcut is turned off in System Settings → Keyboard → Keyboard Shortcuts → Spotlight.")
-                    .font(.callout).foregroundStyle(.orange)
-            }
+            tapDetail
 
             Toggle("Caps Lock acts as Control", isOn: edit(\.capsLockToControl))
                 .disabled(model.config.hyperKey == .capsLock)
-            if model.config.hyperKey == .capsLock {
-                Text("Caps Lock is your Hyper key").font(.caption).foregroundStyle(.secondary)
-            }
+                .help(model.config.hyperKey == .capsLock ? "Caps Lock is your Hyper key" : "")
         }
     }
 
     @ViewBuilder private var tapDetail: some View {
         switch model.config.tapAction {
         case .spotlight:
-            EmptyView()
+            if spotlight.currentShortcut() == .disabled {
+                Text("Spotlight's shortcut is turned off in System Settings → Keyboard → Keyboard Shortcuts → Spotlight.")
+                    .font(.callout).foregroundStyle(.orange)
+            }
         case .app(let bundleID):
-            Button(AppInfo.details(for: bundleID)?.name ?? "Not installed on this Mac") {
-                if let id = AppInfo.chooseApp() { model.edit { $0.tapAction = .app(bundleID: id) } }
+            LabeledContent("App") {
+                Button(AppInfo.details(for: bundleID)?.name ?? "Not installed on this Mac") {
+                    if let id = AppInfo.chooseApp() { model.edit { $0.tapAction = .app(bundleID: id) } }
+                }
             }
         case .keys(let code, let modifiers):
-            KeyRecorderField(keyCode: code == 0 && modifiers.isEmpty ? nil : code, modifiers: modifiers) { code, mods in
-                model.edit { $0.tapAction = .keys(keyCode: code, modifiers: mods) }
-            }
-        }
-    }
-
-    private var bindingsSection: some View {
-        section("Hyper + key") {
-            ForEach(BindableKey.all, id: \.self) { key in
-                BindingRow(key: key, binding: model.config.bindings[key]) { newBinding in
-                    model.edit { $0.bindings[key] = newBinding }
+            LabeledContent("Shortcut") {
+                KeyRecorderField(keyCode: code, modifiers: modifiers) { code, mods in
+                    model.edit { $0.tapAction = .keys(keyCode: code, modifiers: mods) }
                 }
             }
         }
     }
 
+    private var shortcutsSection: some View {
+        let bound = BindableKey.all.filter { model.config.bindings[$0] != nil }
+        let free = BindableKey.all.filter { model.config.bindings[$0] == nil }
+        return Section {
+            ForEach(bound, id: \.self) { key in
+                BindingRow(key: key, binding: model.config.bindings[key]!) { newBinding in
+                    model.edit { $0.bindings[key] = newBinding }
+                }
+            }
+            AddBindingMenu(freeKeys: free) { key, binding in
+                model.edit { $0.bindings[key] = binding }
+            }
+        } header: {
+            Text("Hyper + key")
+        } footer: {
+            Text("Any key 0–9 or A–Z can open an app or snap the front window.")
+                .font(.caption).foregroundStyle(.secondary)
+        }
+    }
+
     private var restoreSection: some View {
-        section("Restore size") {
-            Text("Where Hyper + Restore puts a window it hasn't snapped before, centered.")
-                .font(.callout).foregroundStyle(.secondary)
+        Section {
             percentSlider("Width", \.width)
             percentSlider("Height", \.height)
+        } header: {
+            Text("Restore size")
+        } footer: {
+            Text("Where Restore puts a window it hasn't snapped before, centered.")
+                .font(.caption).foregroundStyle(.secondary)
         }
     }
 
     private var thisMacSection: some View {
-        section("This Mac") {
+        Section {
             Toggle("Launch at login", isOn: SwiftUI.Binding(
                 get: { launchAtLogin },
                 set: { enabled in
@@ -124,6 +129,9 @@ struct SettingsView: View {
                 get: { model.showMenuBarIcon },
                 set: { model.setShowMenuBarIcon($0) }
             ))
+        } header: {
+            Text("This Mac")
+        } footer: {
             if !model.showMenuBarIcon {
                 Text("Open Haute Key again (from Spotlight or Finder) to get back to Settings.")
                     .font(.caption).foregroundStyle(.secondary)
@@ -132,13 +140,6 @@ struct SettingsView: View {
     }
 
     // MARK: - Helpers
-
-    private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title).font(.headline)
-            content()
-        }
-    }
 
     /// A SwiftUI binding that saves to config.json on every change.
     private func edit<Value>(_ path: WritableKeyPath<Config, Value>) -> SwiftUI.Binding<Value> {
@@ -171,14 +172,15 @@ struct SettingsView: View {
     }
 
     private func percentSlider(_ label: String, _ path: WritableKeyPath<RestoreSize, Double>) -> some View {
-        HStack {
-            Text(label).frame(width: 50, alignment: .leading)
-            Slider(value: SwiftUI.Binding(
-                get: { model.config.restoreSize[keyPath: path] },
-                set: { value in model.edit { $0.restoreSize[keyPath: path] = (value * 20).rounded() / 20 } }
-            ), in: 0.1...1.0, step: 0.05)
-            Text("\(Int((model.config.restoreSize[keyPath: path] * 100).rounded()))%")
-                .monospacedDigit().frame(width: 44, alignment: .trailing)
+        LabeledContent(label) {
+            HStack {
+                Slider(value: SwiftUI.Binding(
+                    get: { model.config.restoreSize[keyPath: path] },
+                    set: { value in model.edit { $0.restoreSize[keyPath: path] = (value * 20).rounded() / 20 } }
+                ), in: 0.1...1.0, step: 0.05)
+                Text("\(Int((model.config.restoreSize[keyPath: path] * 100).rounded()))%")
+                    .monospacedDigit().frame(width: 40, alignment: .trailing)
+            }
         }
     }
 }
