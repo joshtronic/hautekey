@@ -24,7 +24,7 @@ enum Problem: Hashable, Identifiable {
     /// Short form for the menu bar menu; `message` has the full explanation for Settings.
     var title: String {
         switch self {
-        case .configError: "config.json has an error"
+        case .configError: "Settings file has an error"
         case .karabinerRunning: "Karabiner-Elements is running"
         case .secureInput: "Secure keyboard entry is on"
         case .spotlightShortcutDisabled: "Spotlight's shortcut is off"
@@ -34,7 +34,7 @@ enum Problem: Hashable, Identifiable {
     var message: String {
         switch self {
         case .configError(let message):
-            "config.json has an error, so the last working settings are still in use. \(message)"
+            "The settings file has an error, so the last working settings are still in use. \(message)"
         case .karabinerRunning:
             "Karabiner-Elements is running and may grab the keyboard first. Quit it from its menu bar icon; if the problem persists, use Karabiner's uninstaller."
         case .secureInput:

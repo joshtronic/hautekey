@@ -213,3 +213,24 @@ public enum ConfigCodec {
         }
     }
 }
+
+extension ConfigError {
+    /// The 1-based line in `text` the error points at, for highlighting in an editor.
+    /// Field errors are located by finding each key of the dotted path in order.
+    public func line(in text: String) -> Int? {
+        switch self {
+        case .syntax(let line, _):
+            return line
+        case .invalid(let field, _):
+            var searchStart = text.startIndex
+            var found: String.Index?
+            for segment in field.split(separator: ".") {
+                guard let range = text.range(of: "\"\(segment)\"", range: searchStart..<text.endIndex) else { break }
+                found = range.lowerBound
+                searchStart = range.upperBound
+            }
+            guard let found else { return nil }
+            return text[..<found].reduce(1) { $1 == "\n" ? $0 + 1 : $0 }
+        }
+    }
+}

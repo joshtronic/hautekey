@@ -26,7 +26,7 @@ struct SettingsView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     if model.configError != nil {
-                        Button("Edit Config File…") { isEditingRaw = true }
+                        Button("Edit Settings File…") { isEditingRaw = true }
                     }
                 }
             }
@@ -147,16 +147,14 @@ struct SettingsView: View {
 
     private var configFileSection: some View {
         Section {
-            LabeledContent("config.json") {
-                HStack {
-                    Button("Edit…") { isEditingRaw = true }
-                    Button("Show in Finder", action: model.revealConfigFile)
-                }
+            HStack {
+                Button("Edit…") { isEditingRaw = true }
+                Button("Show in Finder", action: model.revealConfigFile)
             }
         } header: {
-            Text("Config file")
+            Text("Settings file")
         } footer: {
-            Text("Everything above is saved here. It can live in your dotfiles as a symlink; edits from any editor apply right away.")
+            Text("Your shortcuts are saved as a plain text file you can back up or keep in your dotfiles. Changes made in any editor apply right away.")
                 .font(.caption).foregroundStyle(.secondary)
         }
     }
