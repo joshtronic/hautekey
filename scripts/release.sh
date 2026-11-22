@@ -60,7 +60,9 @@ echo "sha256 $SHA"
 if ! $DRY_RUN; then
     git tag -a "$TAG" -m "Haute Key $VERSION"
     git push origin "$TAG"
-    gh release create "$TAG" "$ZIP" --draft --title "Haute Key $VERSION" --generate-notes
+    # HauteKey.zip is a stable name, so releases/latest/download/HauteKey.zip always works.
+    cp -f "$ZIP" build/HauteKey.zip
+    gh release create "$TAG" "$ZIP" build/HauteKey.zip --draft --title "Haute Key $VERSION" --generate-notes
     echo "Draft release $TAG created. Review and publish it on GitHub, then update the cask:"
     echo "  version \"$VERSION\""
     echo "  sha256 \"$SHA\""

@@ -271,6 +271,9 @@ p { text-wrap: pretty; }
 .close { padding-block: clamp(64px, 9vw, 112px); display: grid; gap: 20px; justify-items: center; text-align: center; }
 .close h2 { font-size: clamp(36px, 5.6vw, 72px); }
 .close p { margin: 0; color: var(--fog); max-width: 56ch; }
+.close .brew { margin: 4px 0 0; color: var(--fog); }
+.close .brew code { font: 500 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace; color: var(--gold-light); overflow-wrap: anywhere; user-select: all; }
+.close .fine { color: var(--fog); opacity: .8; }
 .close .row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px 28px; margin-top: 8px; }
 
 footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-block: 26px 18px; border-top: 1px solid var(--rule); color: var(--fog); font-size: 14px; }
@@ -460,7 +463,8 @@ footer a { color: var(--fog); }
         <tr><th scope="row">Permissions</th><td>Accessibility, to move windows. Input Monitoring, to see the Hyper key. The app walks you through both.</td></tr>
         <tr><th scope="row">Settings</th><td>One plain file at <code>~/.config/hautekey/config.json</code>, edited in the app or by hand. Symlink it into your dotfiles; changes apply live.</td></tr>
         <tr><th scope="row">License</th><td>GPL-3.0. The source is on <a href="https://github.com/joshtronic/hautekey">GitHub</a>.</td></tr>
-        <tr><th scope="row">Price</th><td>Pay what you want. $5 is a nice thank-you; $0 is fine.</td></tr>
+        <tr><th scope="row">Install</th><td><a href="https://github.com/joshtronic/hautekey/releases/latest/download/HauteKey.zip">Download the app</a>, or <code>brew install --cask joshtronic/tap/hautekey</code></td></tr>
+        <tr><th scope="row">Price</th><td>Pay what you want <a href="https://ko-fi.com/joshtronic">on Ko-fi</a>. $5 is a nice thank-you; $0 is fine.</td></tr>
       </table>
     </section>
 
@@ -484,11 +488,13 @@ footer a { color: var(--fog); }
 
     <section class="close" id="get" aria-labelledby="get-title">
       <h2 id="get-title">Pay what you want.</h2>
-      <p>Haute Key is free and open source, and it always will be. Signed downloads are on the way; until then, it builds from source in a couple of minutes. If it saves you a subscription, a few dollars says thanks.</p>
+      <p>Haute Key is free and open source, and it always will be. Download it, and if it saves you a subscription, a few dollars says thanks.</p>
       <div class="row">
-        <a class="cta" href="https://github.com/joshtronic/hautekey#install"><span class="cap" data-cap data-w="3.5" data-variant="accent" aria-hidden="true"></span><span class="label">Get Haute Key</span></a>
-        <a href="https://github.com/sponsors/joshtronic">Or sponsor on GitHub</a>
+        <a class="cta" href="https://github.com/joshtronic/hautekey/releases/latest/download/HauteKey.zip"><span class="cap" data-cap data-w="3.5" data-variant="accent" aria-hidden="true"></span><span class="label">Download</span></a>
+        <a href="https://ko-fi.com/joshtronic">Pay what you want on Ko-fi</a>
       </div>
+      <p class="brew">Or with Homebrew: <code>brew install --cask joshtronic/tap/hautekey</code></p>
+      <small class="fine">Version 1.0.0. macOS 15 or later. Signed and notarized by Apple.</small>
     </section>
   </main>
 

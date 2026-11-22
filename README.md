@@ -71,17 +71,14 @@ Haute Key is that whole setup in one app.
 
 ## Install
 
-Signed downloads are coming. For now, build it from source.
-
-**You need** macOS 15 or later, and Xcode installed and selected
-(`sudo xcode-select -s /Applications/Xcode.app`).
+[Download Haute Key](https://github.com/joshtronic/hautekey/releases/latest/download/HauteKey.zip),
+unzip it, and move **Haute Key** to Applications. Or use Homebrew:
 
 ```sh
-git clone https://github.com/joshtronic/hautekey.git
-cd hautekey
-scripts/create-dev-cert.sh     # once: a local signing certificate, so permissions survive rebuilds
-scripts/build-app.sh --open    # builds, signs, installs ~/Applications/Haute Key.app, and launches it
+brew install --cask joshtronic/tap/hautekey
 ```
+
+It needs macOS 15 or later, and it's signed and notarized by Apple.
 
 The first time it runs, Haute Key walks you through two permissions in **System Settings →
 Privacy & Security**:
@@ -89,7 +86,7 @@ Privacy & Security**:
 - **Input Monitoring**, so it can see the Hyper key.
 - **Accessibility**, so it can move windows.
 
-If Haute Key isn't in a list, click **+** and choose it from `~/Applications`. It starts
+If Haute Key isn't in a list, click **+** and choose it from Applications. It starts
 working as soon as both are on, with no restart, and it launches at login from then on.
 
 ## Configuration
@@ -135,6 +132,17 @@ that only make sense on one Mac, like launch at login and the menu bar icon, are
 - **Window snapping** goes to exact halves of the screen, with no gaps, and never moves a
   window to another display.
 
+## Build from source
+
+You need Xcode installed and selected (`sudo xcode-select -s /Applications/Xcode.app`).
+
+```sh
+git clone https://github.com/joshtronic/hautekey.git
+cd hautekey
+scripts/create-dev-cert.sh     # once: a local signing certificate, so permissions survive rebuilds
+scripts/build-app.sh --open    # builds, signs, installs ~/Applications/Haute Key.app, and launches it
+```
+
 ## Development
 
 ```sh
@@ -145,12 +153,13 @@ scripts/make-icon.sh        # regenerate Resources/AppIcon.icns from AppIcon.svg
 
 ## Uninstall
 
-Quit Haute Key (that clears its key mapping) and delete `~/Applications/Haute Key.app`. To
+Quit Haute Key (that clears its key mapping) and delete **Haute Key** from Applications, or run `brew uninstall --cask hautekey`. To
 remove your settings as well, delete `~/.config/hautekey`.
 
 ## Support
 
 Haute Key is free and always will be. If it saves you a subscription, you can
+[pay what you want on Ko-fi](https://ko-fi.com/joshtronic) or
 [sponsor me on GitHub](https://github.com/sponsors/joshtronic). Totally optional, and much
 appreciated.
 
