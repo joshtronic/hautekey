@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://hautekey.app/og.png">
 <meta property="og:url" content="https://hautekey.app/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1b2333">
+<meta name="theme-color" content="#152349">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -25,139 +25,113 @@
 
 :root {
   color-scheme: dark;
-  --mat: #1b2333;
-  --mat-raised: #222c40;
-  --rule: #34405a;
-  --cap-side: #232428;
-  --cap: #3c3e45;
-  --cap-top: #4a4d55;
+  --mat: #152349;
+  --desk: #070b18;
+  --rule: #2c3d72;
   --gold: #d9a94f;
+  --legend-gold: #e8bd66;
   --gold-light: #f1d08d;
   --oxblood: #8e2b34;
-  --oxblood-top: #a3363f;
-  --chalk: #edecE6;
-  --fog: #aab3c4;
+  --chalk: #efeee9;
+  --fog: #b3bdd8;
   --face: "Archivo", -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --legend: "Archivo", -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI Symbol", sans-serif;
 }
 
 * { box-sizing: border-box; }
-html { background: var(--mat); }
+html { background: var(--desk); }
 body {
   margin: 0;
   color: var(--chalk);
   font: 400 17px/1.6 var(--face);
   font-stretch: 100%;
-  background-color: var(--mat);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background: var(--desk);
   -webkit-font-smoothing: antialiased;
-  padding: max(10px, env(safe-area-inset-top, 0px)) max(10px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px));
+  padding: max(8px, env(safe-area-inset-top, 0px)) max(8px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
 }
 ::selection { background: var(--gold); color: var(--mat); }
 a { color: var(--gold-light); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { color: var(--chalk); }
 :focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; border-radius: 6px; }
 
-/* The deskmat: one stitched edge around the whole page. */
+/* The deskmat: a navy mat with a dark bound edge, sitting on a darker desk. */
 .mat {
-  border: 2px dashed var(--gold);
+  position: relative;
+  border: 14px solid #0c1431;
   border-radius: 26px;
-  min-height: calc(100vh - 20px);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") var(--mat);
+  min-height: calc(100vh - 16px);
 }
-.wrap { max-width: 1120px; margin: 0 auto; padding-inline: clamp(18px, 4vw, 48px); }
+/* Gold topstitching along the binding: one continuous SVG path, sized by script. */
+.binding { position: absolute; inset: -14px; width: calc(100% + 28px); height: calc(100% + 28px); pointer-events: none; overflow: visible; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: clamp(8px, 3vw, 40px); }
 
-/* Keycaps */
+/* Keycaps: inline SVG drawn by capSVG() below; the text inside is the no-JS fallback. */
 .cap {
   --size: 54px;
+  --w: 1;
   position: relative;
-  display: inline-grid;
-  place-items: center;
-  min-width: var(--size);
+  display: inline-block;
+  flex: none;
+  width: calc(var(--size) * var(--w));
   height: var(--size);
-  padding: 0 calc(var(--size) * .22);
-  border: 0;
-  border-radius: calc(var(--size) * .18);
-  background: var(--cap-side);
-  color: var(--gold-light);
-  font: 600 calc(var(--size) * .34)/1 var(--legend);
-  box-shadow: 0 calc(var(--size) * .14) calc(var(--size) * .2) rgb(0 0 0 / .35);
-  transition: transform .09s ease-out, box-shadow .09s ease-out;
+  filter: drop-shadow(0 calc(var(--size) * .12) calc(var(--size) * .14) rgb(4 8 24 / .55));
+  transition: transform .08s ease-out, filter .08s ease-out;
+  color: var(--legend-gold);
+  font: 600 calc(var(--size) * .34)/var(--size) var(--face);
+  text-align: center;
 }
-.cap::before {
-  content: "";
-  position: absolute;
-  inset: calc(var(--size) * .06) calc(var(--size) * .09) calc(var(--size) * .16);
-  border-radius: calc(var(--size) * .13);
-  background: linear-gradient(170deg, var(--cap-top), var(--cap) 70%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .08);
-}
-.cap > * { position: relative; }
-.cap span, .cap svg { position: relative; transform: translateY(calc(var(--size) * -.05)); }
-.cap.down { transform: translateY(calc(var(--size) * .07)); box-shadow: 0 calc(var(--size) * .05) calc(var(--size) * .08) rgb(0 0 0 / .35); }
-.cap.hyper::after {
-  content: "";
-  position: absolute;
-  inset: calc(var(--size) * .14) calc(var(--size) * .17) calc(var(--size) * .24);
-  border: 1.5px dashed var(--gold);
-  border-radius: calc(var(--size) * .08);
-  opacity: .85;
-}
-.cap.hyper span { align-self: end; justify-self: end; margin: 0 calc(var(--size) * .08) calc(var(--size) * .28) 0; }
-.cap.wide { min-width: calc(var(--size) * 1.75); }
-.cap.accent { background: #5e1c23; color: #f6e3cf; }
-.cap.accent::before { background: linear-gradient(170deg, var(--oxblood-top), var(--oxblood) 70%); }
-.cap svg { width: 62%; height: 62%; }
+.cap > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cap.down { transform: translateY(calc(var(--size) * .07)); filter: drop-shadow(0 calc(var(--size) * .04) calc(var(--size) * .05) rgb(4 8 24 / .55)); }
 
 /* Header */
-header.top {
-  display: flex; align-items: center; justify-content: space-between; gap: 18px;
-  padding-block: 22px;
-}
-.brand { display: flex; align-items: center; gap: 12px; color: var(--chalk); text-decoration: none; font-weight: 700; font-stretch: 112%; letter-spacing: .01em; }
+header.top { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-block: 14px 8px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--chalk); text-decoration: none; font-weight: 700; font-stretch: 112%; }
 .brand img { width: 34px; height: 34px; }
 header nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 28px); font-size: 15px; }
 header nav a { color: var(--fog); text-decoration: none; }
 header nav a:hover { color: var(--chalk); }
 
-/* Hero */
-.hero { display: grid; gap: 26px; padding-block: clamp(18px, 4vw, 40px) 12px; }
-.hero-copy { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
+/* Hero: the pitch on the left, the set in use on the right. */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: 26px clamp(28px, 4vw, 56px);
+  align-items: start;
+  padding-block: clamp(10px, 2.5vh, 30px) 12px;
+}
+.hero h1 { grid-column: 1 / -1; }
 h1 {
   margin: 0;
-  font: 800 clamp(42px, 6.6vw, 88px)/0.95 var(--face);
+  font: 800 clamp(38px, 5.4vw, 78px)/0.98 var(--face);
   font-stretch: 125%;
   letter-spacing: -0.025em;
   text-wrap: balance;
-  max-width: 13ch;
 }
-.lede { margin: 18px 0 0; max-width: 54ch; color: var(--fog); font-size: clamp(17px, 1.6vw, 19px); }
+.lede { margin: 6px 0 0; max-width: 42ch; color: var(--fog); font-size: clamp(17px, 1.4vw, 19px); }
 .lede strong { color: var(--chalk); font-weight: 600; }
-.get { display: grid; justify-items: start; gap: 10px; padding-bottom: 6px; }
-.button-cap {
-  --size: 58px;
-  min-width: 0;
-  color: #f6e3cf;
-  font: 700 18px/1 var(--face);
-  font-stretch: 112%;
-  text-decoration: none;
-  padding: 0 30px;
-  cursor: pointer;
-}
-.button-cap span { transform: translateY(-3px); }
-.button-cap:hover { color: #fff; }
-.button-cap:active { transform: translateY(4px); }
-.get small { color: var(--fog); font-size: 14px; }
+.get { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 28px; }
+.get small { color: var(--fog); font-size: 14px; max-width: 18ch; line-height: 1.4; }
 
-/* The demo: a Mac on the mat */
-.rig { display: grid; gap: 22px; justify-items: center; padding-top: 8px; }
+/* A keycap you can click: the cap is drawn behind the label. */
+.cta {
+  position: relative; display: inline-grid; place-items: center;
+  text-decoration: none; color: #fbe9d6;
+  font: 700 18px/1 var(--face); font-stretch: 112%;
+}
+.cta .cap { --size: 66px; --w: 3.5; }
+.cta span.label { position: absolute; inset: 0 0 26% 0; display: grid; place-items: center; pointer-events: none; }
+.cta:hover { color: #fff; }
+.cta:active .cap { transform: translateY(5px); }
+
+/* The demo */
+.rig { display: grid; gap: 18px; justify-items: center; }
 .mac {
   width: 100%;
-  max-width: 1000px;
   aspect-ratio: 16 / 10;
   border-radius: 14px;
-  padding: 10px;
-  background: #0f131b;
-  box-shadow: 0 30px 60px rgb(0 0 0 / .45), 0 0 0 1px rgb(255 255 255 / .06);
+  padding: 9px;
+  background: #0b1022;
+  box-shadow: 0 26px 50px rgb(3 6 20 / .55), 0 0 0 1px rgb(255 255 255 / .07);
 }
 .screen {
   position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 6px;
@@ -176,7 +150,7 @@ h1 {
 .menubar b { font-weight: 700; }
 .menubar .tray { margin-left: auto; display: flex; align-items: center; gap: 1.6cqw; }
 .menubar .tray svg { width: 1.5cqw; min-width: 9px; height: auto; }
-.desk { position: absolute; inset: 3.4cqw 0 0; }
+.desk { position: absolute; inset: max(3.4cqw, 14px) 0 0; }
 .win {
   position: absolute;
   border-radius: 1cqw;
@@ -193,7 +167,7 @@ h1 {
 .win .bar i { width: 1cqw; height: 1cqw; min-width: 5px; min-height: 5px; border-radius: 50%; background: #ff5f57; }
 .win .bar i:nth-child(2) { background: #febc2e; }
 .win .bar i:nth-child(3) { background: #28c840; }
-.win .bar em { font-style: normal; margin-inline: auto; opacity: .8; }
+.win .bar em { font-style: normal; margin-inline: auto; opacity: .85; }
 .term { background: #141519; color: #c8cfd8; }
 .term .bar { background: #1e1f24; color: #9aa0ab; }
 .term pre { margin: 0; padding: 1.2cqw 1.6cqw; font: max(8px, 1.15cqw)/1.55 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; }
@@ -202,13 +176,13 @@ h1 {
 .browser { background: #f3f2ef; color: #22252b; }
 .browser .bar { background: #e2e0db; color: #4d5058; }
 .browser .url { margin: .8cqw 1.4cqw; padding: .5cqw 1cqw; border-radius: 99px; background: #fff; color: #555a63; font-size: max(8px, 1.05cqw); }
-.browser .page { padding: 1cqw 2cqw; display: grid; gap: .9cqw; }
-.browser .page h4 { margin: 0; font: 800 max(10px, 2cqw)/1.1 var(--face); font-stretch: 125%; }
-.browser .ln { height: .9cqw; min-height: 4px; border-radius: 99px; background: #d4d1ca; }
-.music { background: linear-gradient(160deg, #3b1d2b, #1c1520); color: #f4e4ec; }
-.music .bar { background: rgb(0 0 0 / .25); color: #d7b9c8; }
+.browser .page { padding: .6cqw 2cqw; }
+.browser .page .headline { margin: 0 0 .8cqw; font: 800 max(10px, 2.1cqw)/1.05 var(--face); font-stretch: 125%; }
+.browser .page p { margin: 0 0 .7cqw; font-size: max(7px, 1.1cqw); line-height: 1.5; color: #4a4e57; }
+.music { background: linear-gradient(160deg, #2b2a3a, #15131c); color: #ece6f2; }
+.music .bar { background: rgb(0 0 0 / .25); color: #bdb4cc; }
 .music .now { display: grid; grid-template-columns: auto 1fr; gap: 1.6cqw; align-items: center; padding: 1.8cqw 2cqw; }
-.music .art { width: 9cqw; aspect-ratio: 1; border-radius: .8cqw; background: conic-gradient(from 200deg, #d9a94f, #8e2b34, #2b3a63, #d9a94f); }
+.music .art { width: 9cqw; aspect-ratio: 1; border-radius: .8cqw; background: radial-gradient(circle at 30% 70%, #6f8f5a 0 18%, transparent 19%), linear-gradient(170deg, #9fb4c9 0%, #9fb4c9 46%, #4e6a3f 47%, #2f4426 100%); }
 .music small { display: block; opacity: .7; }
 .win.front { box-shadow: 0 1.8cqw 4.4cqw rgb(0 0 0 / .55), 0 0 0 1px rgb(255 255 255 / .14); }
 
@@ -219,14 +193,14 @@ h1 {
   box-shadow: 0 0 0 1px rgb(255 255 255 / .15);
 }
 .dock figure { margin: 0; position: relative; display: grid; justify-items: center; }
-.dock img { width: 5cqw; height: 5cqw; min-width: 20px; min-height: 20px; display: block; transition: transform .25s cubic-bezier(.16, 1, .3, 1); }
+.dock img { width: 5cqw; height: 5cqw; min-width: 18px; min-height: 18px; display: block; }
 .dock figure.bounce img { animation: bounce .55s cubic-bezier(.3, 0, .2, 1); }
 @keyframes bounce { 0%, 100% { transform: none; } 40% { transform: translateY(-1.6cqw); } }
 .dock figcaption {
   position: absolute; top: -.6cqw; right: -.5cqw;
   min-width: 1.9cqw; height: 1.9cqw; padding: 0 .5cqw; border-radius: 99px;
   display: grid; place-items: center;
-  background: var(--gold); color: #1b2333; font: 700 max(8px, 1.05cqw)/1 var(--face);
+  background: var(--gold); color: #152349; font: 700 max(8px, 1.05cqw)/1 var(--face);
 }
 .dock figure::after {
   content: ""; position: absolute; bottom: -.5cqw; width: .45cqw; height: .45cqw; min-width: 3px; min-height: 3px;
@@ -249,19 +223,15 @@ h1 {
 .spotlight.open { opacity: 1; transform: translate(-50%, 0) scale(1); }
 .spotlight svg { width: 2.2cqw; min-width: 12px; flex: none; }
 .spotlight .typed::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -.15em; background: var(--gold-light); }
-.spotlight .ghost { color: #8d93a1; }
+.spotlight .ghost { color: #9298a6; }
 
-/* Key row in sync with the demo */
-.keys { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: 10px; }
-.keys .gap { width: 22px; }
+.keys { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: 10px 26px; }
+.krow { display: flex; gap: 9px; align-items: end; }
 .keys .cap { cursor: pointer; }
-.readout {
-  min-height: 2.2em; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
-  font-size: 18px; color: var(--fog); text-align: center;
-}
-.readout .press { color: var(--gold-light); font-weight: 700; font-stretch: 112%; font-family: var(--legend); }
+.readout { min-height: 1.8em; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 18px; color: var(--fog); }
+.readout .press { color: var(--gold-light); font-weight: 700; font-stretch: 112%; }
 .readout .result { color: var(--chalk); }
-.readout svg { width: 18px; color: var(--fog); }
+.readout svg { width: 18px; }
 .playpause {
   appearance: none; border: 1px solid var(--rule); background: transparent; color: var(--fog);
   border-radius: 99px; padding: 6px 14px; font: 500 14px/1 var(--face); cursor: pointer;
@@ -270,32 +240,25 @@ h1 {
 
 /* Sections */
 section.sheet { padding-block: clamp(56px, 8vw, 96px) 0; }
-h2 {
-  margin: 0 0 10px;
-  font: 800 clamp(30px, 4vw, 48px)/1 var(--face);
-  font-stretch: 125%;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-.sub { margin: 0 0 34px; color: var(--fog); max-width: 60ch; }
+h2 { margin: 0 0 10px; font: 800 clamp(30px, 4vw, 48px)/1 var(--face); font-stretch: 125%; letter-spacing: -0.02em; text-wrap: balance; }
+p { text-wrap: pretty; }
+.sub { margin: 0 0 30px; color: var(--fog); max-width: 60ch; }
+
+
 
 .kits { border-top: 1px solid var(--rule); }
-.kit {
-  display: grid; grid-template-columns: minmax(240px, 380px) 1fr; gap: 28px 48px; align-items: center;
-  padding-block: 30px; border-bottom: 1px solid var(--rule);
-}
+.kit { display: grid; grid-template-columns: minmax(240px, 380px) 1fr; gap: 24px 48px; align-items: center; padding-block: 30px; border-bottom: 1px solid var(--rule); }
 .kit h3 { margin: 0 0 6px; font: 700 22px/1.2 var(--face); font-stretch: 112%; }
 .kit p { margin: 0; color: var(--fog); max-width: 52ch; }
-.kit .render { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.kit .render { display: flex; flex-wrap: wrap; gap: 9px; align-items: end; }
 .kit .render .cap { --size: 50px; }
 .legend { display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; margin: 16px 0 0; }
-.legend dt { font: 700 15px/1.6 var(--legend); color: var(--gold-light); }
+.legend dt { font: 700 15px/1.6 var(--face); color: var(--gold-light); }
 .legend dd { margin: 0; color: var(--chalk); }
 
 .specs { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .specs th, .specs td { text-align: left; vertical-align: top; padding: 14px 0; border-bottom: 1px solid var(--rule); }
 .specs th { width: 34%; padding-right: 24px; color: var(--fog); font-weight: 500; }
-.specs td { color: var(--chalk); }
 .specs code { font: 500 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace; color: var(--gold-light); overflow-wrap: anywhere; }
 
 .notes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 360px); gap: 40px 64px; align-items: start; }
@@ -311,16 +274,26 @@ h2 {
 .close { padding-block: clamp(64px, 9vw, 112px); display: grid; gap: 20px; justify-items: start; }
 .close h2 { font-size: clamp(36px, 5.6vw, 72px); max-width: 14ch; }
 .close p { margin: 0; color: var(--fog); max-width: 56ch; }
-.close .row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 8px; }
+.close .row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 8px; }
 
-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-block: 28px 32px; border-top: 1px dashed rgb(217 169 79 / .45); color: var(--fog); font-size: 14px; }
+footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-block: 26px 18px; border-top: 1px solid var(--rule); color: var(--fog); font-size: 14px; }
 footer a { color: var(--fog); }
 
+.still *, .still *::before, .still *::after { transition: none !important; animation: none !important; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .lede { max-width: 56ch; }
+}
 @media (max-width: 760px) {
-  .hero-copy, .kit, .notes { grid-template-columns: 1fr; }
+  .wide-br { display: none; }
+  .mat { border-width: 10px; border-radius: 20px; }
+  .binding { inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); }
+  .kit, .notes { grid-template-columns: 1fr; }
   header nav .wide-only { display: none; }
-  .keys .gap { display: none; }
-  .keys .cap { --size: 42px; }
+  .keys { flex-direction: column; align-items: center; gap: 12px; }
+  .keys .cap, .kit .render .cap { --size: 40px; }
+  .mac { aspect-ratio: 4 / 3; }
   .readout { font-size: 16px; }
   .specs, .specs tbody, .specs tr, .specs th, .specs td { display: block; width: 100%; }
   .specs th { padding: 14px 0 2px; border-bottom: 0; }
@@ -335,27 +308,37 @@ footer a { color: var(--fog); }
 </style>
 </head>
 <body>
+<!-- Shared keycap materials, referenced by every capSVG(). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="cap-side" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34363d"/><stop offset="1" stop-color="#17181c"/></linearGradient>
+    <radialGradient id="cap-dish" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="#3a3d44"/><stop offset=".62" stop-color="#43464e"/><stop offset="1" stop-color="#53565e"/></radialGradient>
+    <linearGradient id="cap-ox-side" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a2530"/><stop offset="1" stop-color="#3f1016"/></linearGradient>
+    <radialGradient id="cap-ox-dish" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="#84283a"/><stop offset=".62" stop-color="#94303b"/><stop offset="1" stop-color="#a73a45"/></radialGradient>
+    <linearGradient id="cap-rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".5" stop-color="#fff" stop-opacity=".04"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient>
+  </defs>
+</svg>
+
 <div class="mat">
+<svg class="binding" id="binding" aria-hidden="true"></svg>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/"><img src="/icon.png" alt="" width="34" height="34">Haute Key</a>
     <nav aria-label="Main">
-      <a class="wide-only" href="#kits">Kits</a>
+      <a class="wide-only" href="#how">How it works</a>
       <a class="wide-only" href="#specs">Specs</a>
-      <a class="wide-only" href="#notes">Notes</a>
+      <a class="wide-only" href="#notes">Why</a>
       <a href="https://github.com/joshtronic/hautekey">GitHub</a>
     </nav>
   </header>
 
   <main>
     <section class="hero" aria-labelledby="title">
-      <div class="hero-copy">
-        <div>
-          <h1 id="title">The hautest key on your Mac.</h1>
-          <p class="lede"><strong>A Hyper key for macOS.</strong> Tap right ⌘ for Spotlight. Hold it with a number to open an app, or with W, A, S, or D to snap the window. One small app instead of Karabiner and Raycast.</p>
-        </div>
+      <h1 id="title">The hautest key<br class="wide-br"> on your Mac.</h1>
+      <div>
+        <p class="lede"><strong>A Hyper key for macOS.</strong> Tap right ⌘ for Spotlight. Hold it with a number to open an app, or with W, A, S, or D to snap the window. One small app instead of Karabiner and Raycast.</p>
         <div class="get">
-          <a class="cap accent button-cap" href="#get"><span>Get Haute Key</span></a>
+          <a class="cta" href="#get"><span class="cap" data-cap data-w="3.5" data-variant="accent" aria-hidden="true"></span><span class="label">Get Haute Key</span></a>
           <small>Pay what you want. Free and open source.</small>
         </div>
       </div>
@@ -364,7 +347,7 @@ footer a { color: var(--fog); }
         <div class="mac" role="img" aria-label="Demo: a Mac desktop where Haute Key opens Spotlight, switches between Alacritty, Firefox, and Music, and snaps windows to the left half, right half, full screen, and back.">
           <div class="screen">
             <div class="menubar" aria-hidden="true">
-              <svg viewBox="0 0 14 17" width="11" fill="currentColor" aria-hidden="true"><path d="M11.6 9c0-2 1.7-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7s-1.6-.7-2.6-.7C3.4 4.4 2 5.2 1.3 6.6-.2 9.2.9 13 2.3 15c.7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.6c1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3 0 0-2.3-.9-2.3-3.6zM9.6 3c.6-.7 1-1.7.9-2.7-.9 0-1.9.6-2.5 1.3-.6.6-1 1.6-.9 2.6 1 .1 1.9-.5 2.5-1.2z"/></svg>
+              <svg viewBox="0 0 14 17" width="11" fill="currentColor"><path d="M11.6 9c0-2 1.7-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7s-1.6-.7-2.6-.7C3.4 4.4 2 5.2 1.3 6.6-.2 9.2.9 13 2.3 15c.7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.6c1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3 0 0-2.3-.9-2.3-3.6zM9.6 3c.6-.7 1-1.7.9-2.7-.9 0-1.9.6-2.5 1.3-.6.6-1 1.6-.9 2.6 1 .1 1.9-.5 2.5-1.2z"/></svg>
               <b id="menu-app">Finder</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
               <div class="tray">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
@@ -383,11 +366,15 @@ footer a { color: var(--fog); }
               <div class="win browser closed" data-app="2" data-name="Firefox">
                 <div class="bar"><i></i><i></i><i></i><em>Haute Key</em></div>
                 <div class="url">hautekey.app</div>
-                <div class="page"><h4>The hautest key on your Mac.</h4><div class="ln" style="width:82%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:70%"></div></div>
+                <div class="page">
+                  <div class="headline">The hautest key on your Mac.</div>
+                  <p>A Hyper key for macOS. Tap right ⌘ for Spotlight. Hold it with a number to open an app, or with W, A, S, or D to snap the window.</p>
+                  <p>One small app instead of Karabiner and Raycast.</p>
+                </div>
               </div>
               <div class="win music closed" data-app="6" data-name="Music">
                 <div class="bar"><i></i><i></i><i></i><em>Music</em></div>
-                <div class="now"><div class="art"></div><div><strong>Vogue</strong><small>Madonna</small></div></div>
+                <div class="now"><div class="art"></div><div><strong>On the Hill</strong><small>Venus on the Rocks</small></div></div>
               </div>
             </div>
             <div class="dock" id="dock" aria-hidden="true">
@@ -406,16 +393,18 @@ footer a { color: var(--fog); }
         </div>
 
         <div class="keys" aria-hidden="true">
-          <button class="cap" data-key="1" tabindex="-1"><span>1</span></button>
-          <button class="cap" data-key="2" tabindex="-1"><span>2</span></button>
-          <button class="cap" data-key="6" tabindex="-1"><span>6</span></button>
-          <span class="gap"></span>
-          <button class="cap" data-key="w" tabindex="-1"><span>W</span></button>
-          <button class="cap" data-key="a" tabindex="-1"><span>A</span></button>
-          <button class="cap" data-key="s" tabindex="-1"><span>S</span></button>
-          <button class="cap" data-key="d" tabindex="-1"><span>D</span></button>
-          <span class="gap"></span>
-          <button class="cap hyper wide" data-key="hyper" tabindex="-1"><span>⌘</span></button>
+          <div class="krow">
+            <span class="cap" data-cap data-key="1" data-legend="1">1</span>
+            <span class="cap" data-cap data-key="2" data-legend="2">2</span>
+            <span class="cap" data-cap data-key="6" data-legend="6">6</span>
+          </div>
+          <div class="krow">
+            <span class="cap" data-cap data-key="w" data-legend="W">W</span>
+            <span class="cap" data-cap data-key="a" data-legend="A">A</span>
+            <span class="cap" data-cap data-key="s" data-legend="S">S</span>
+            <span class="cap" data-cap data-key="d" data-legend="D">D</span>
+            <span class="cap" data-cap data-key="hyper" data-w="1.75" data-variant="hyper">⌘</span>
+          </div>
         </div>
         <div class="readout" aria-live="polite">
           <span class="press" id="press">⌘</span>
@@ -426,19 +415,19 @@ footer a { color: var(--fog); }
       </div>
     </section>
 
-    <section class="sheet" id="kits" aria-labelledby="kits-title">
-      <h2 id="kits-title">The kits</h2>
-      <p class="sub">Everything Haute Key does starts from one key. Here's what comes on it, out of the box.</p>
+    <section class="sheet" id="how" aria-labelledby="how-title">
+      <h2 id="how-title">How it works</h2>
+      <p class="sub">Everything starts from one key.</p>
       <div class="kits">
         <div class="kit">
           <div>
-            <h3>Base kit</h3>
+            <h3>Apps and search</h3>
             <p>Tap the Hyper key to search. Hold it with a number to open or switch to an app. On first launch, the numbers follow the apps pinned in your Dock.</p>
           </div>
           <div>
             <div class="render" aria-hidden="true">
-              <span class="cap hyper wide"><span>⌘</span></span>
-              <span class="cap"><span>1</span></span><span class="cap"><span>2</span></span><span class="cap"><span>3</span></span><span class="cap"><span>4</span></span><span class="cap"><span>5</span></span><span class="cap"><span>0</span></span>
+              <span class="cap" data-cap data-w="1.75" data-variant="hyper">⌘</span>
+              <span class="cap" data-cap data-legend="1">1</span><span class="cap" data-cap data-legend="2">2</span><span class="cap" data-cap data-legend="3">3</span><span class="cap" data-cap data-legend="0">0</span>
             </div>
             <dl class="legend">
               <dt>⌘ tap</dt><dd>Spotlight, or Raycast, Alfred, any app, or a shortcut you choose</dd>
@@ -448,15 +437,15 @@ footer a { color: var(--fog); }
         </div>
         <div class="kit">
           <div>
-            <h3>Window kit</h3>
+            <h3>Windows</h3>
             <p>Exact halves of the screen, no gaps and no 48%. Restore puts a window back where it was before you snapped it.</p>
           </div>
           <div>
             <div class="render" aria-hidden="true">
-              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2" fill="currentColor"/></svg></span>
-              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="3" y="5" width="9" height="14" rx="2" fill="currentColor"/></svg></span>
-              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="7" y="8" width="10" height="8" rx="1" fill="currentColor"/></svg></span>
-              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="5" width="9" height="14" rx="2" fill="currentColor"/></svg></span>
+              <span class="cap" data-cap data-variant="snap-w">W</span>
+              <span class="cap" data-cap data-variant="snap-a">A</span>
+              <span class="cap" data-cap data-variant="snap-s">S</span>
+              <span class="cap" data-cap data-variant="snap-d">D</span>
             </div>
             <dl class="legend">
               <dt>⌘ + W</dt><dd>Maximize</dd>
@@ -468,15 +457,15 @@ footer a { color: var(--fog); }
         </div>
         <div class="kit">
           <div>
-            <h3>Mods</h3>
+            <h3>Make it yours</h3>
             <p>Pick the key that becomes Hyper, turn Caps Lock into Control, and bind any key from 0–9 or A–Z to an app or a snap.</p>
           </div>
           <div>
             <div class="render" aria-hidden="true">
-              <span class="cap wide"><span>caps</span></span>
-              <span class="cap"><span>⌥</span></span>
-              <span class="cap"><span>⌃</span></span>
-              <span class="cap hyper wide"><span>⌘</span></span>
+              <span class="cap" data-cap data-w="1.75" data-legend="caps" data-variant="mod">caps</span>
+              <span class="cap" data-cap data-legend="⌥" data-variant="mod">⌥</span>
+              <span class="cap" data-cap data-legend="⌃" data-variant="mod">⌃</span>
+              <span class="cap" data-cap data-w="1.75" data-variant="hyper">⌘</span>
             </div>
             <dl class="legend">
               <dt>Hyper key</dt><dd>Right ⌘, right ⌥, right ⌃, or Caps Lock</dd>
@@ -501,7 +490,7 @@ footer a { color: var(--fog); }
     </section>
 
     <section class="sheet" id="notes" aria-labelledby="notes-title">
-      <h2 id="notes-title">Designer's notes</h2>
+      <h2 id="notes-title">Why I made this</h2>
       <div class="notes">
         <div>
           <p>I bounce between GNOME and macOS, and GNOME gets one thing exactly right: the Super key. Tap it and you're searching. Hold it and press a number to jump to an app, or a direction to snap the window. I map it to the right-hand key, where my thumb already is.</p>
@@ -522,7 +511,7 @@ footer a { color: var(--fog); }
       <h2 id="get-title">Pay what you want.</h2>
       <p>Haute Key is free and open source, and it always will be. Signed downloads are on the way; until then, it builds from source in a couple of minutes. If it saves you a subscription, a few dollars says thanks.</p>
       <div class="row">
-        <a class="cap accent button-cap" href="https://github.com/joshtronic/hautekey#install"><span>Get Haute Key</span></a>
+        <a class="cta" href="https://github.com/joshtronic/hautekey#install"><span class="cap" data-cap data-w="3.5" data-variant="accent" aria-hidden="true"></span><span class="label">Get Haute Key</span></a>
         <a href="https://github.com/sponsors/joshtronic">Or sponsor on GitHub</a>
       </div>
     </section>
@@ -537,11 +526,81 @@ footer a { color: var(--fog); }
 
 <script>
 (() => {
-  const $ = (s, r = document) => r.querySelector(s);
+  // Keycaps: a sculpted cap in SVG. A darker skirt, a dished top face, a lit rim, and a
+  // doubleshot legend. 100 units per 1u of width.
+  const cmdPaths = (s) => {
+    const a = s * .38, r = s * .62 - a / 2;
+    return [
+      `M${-a},${-a}L${a},${-a}L${a},${a}L${-a},${a}Z`,
+      `M${-a},${-a}L${-a},${-a - r}A${r},${r} 0 1 0 ${-a - r},${-a}L${-a},${-a}`,
+      `M${a},${-a}L${a + r},${-a}A${r},${r} 0 1 0 ${a},${-a - r}L${a},${-a}`,
+      `M${a},${a}L${a},${a + r}A${r},${r} 0 1 0 ${a + r},${a}L${a},${a}`,
+      `M${-a},${a}L${-a - r},${a}A${r},${r} 0 1 0 ${-a},${a + r}L${-a},${a}`,
+    ];
+  };
+  const legendText = (W, text, mod) => {
+    const size = mod ? 22 : text.length > 1 ? 24 : 31;
+    const x = mod ? 22 : W / 2, anchor = mod ? 'start' : 'middle', y = mod ? 32 : 47;
+    const t = (fill, dy) => `<text x="${x}" y="${y + dy}" text-anchor="${anchor}" font-family="Archivo, -apple-system, 'SF Pro Text', sans-serif" font-weight="600" font-size="${size}" fill="${fill}">${text}</text>`;
+    return t('rgba(0,0,0,.45)', 1.2) + t('#e8bd66', 0);
+  };
+  const stitchedCmd = (W) => {
+    const g = cmdPaths(20).map(d => `<path d="${d}"/>`).join('');
+    const at = `translate(${W - 42} 44)`;
+    return `<g transform="${at}" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5.5 3.6">
+      <g stroke="rgba(0,0,0,.55)" stroke-width="5" transform="translate(0 1.2)">${g}</g>
+      <g stroke="#d9a94f" stroke-width="4.4">${g}</g>
+      <g stroke="#f6dc9f" stroke-width="1.5" transform="translate(-.5 -.6)">${g}</g></g>`;
+  };
+  const snapIcon = (W, kind) => {
+    const x = W / 2 - 17, y = 28, w = 34, h = 24;
+    const fill = { w: [x, y, w, h], a: [x, y, w / 2, h], d: [x + w / 2, y, w / 2, h], s: [x + 8, y + 6, w - 16, h - 12] }[kind];
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="none" stroke="#e8bd66" stroke-width="3"/>
+      <rect x="${fill[0]}" y="${fill[1]}" width="${fill[2]}" height="${fill[3]}" rx="3" fill="#e8bd66"/>`;
+  };
+  function capSVG(el) {
+    const w = +(el.dataset.w || 1), W = 100 * w, v = el.dataset.variant || '';
+    const ox = v === 'accent';
+    let legend = '';
+    if (v === 'hyper') legend = stitchedCmd(W);
+    else if (v.startsWith('snap-')) legend = snapIcon(W, v.slice(5));
+    else if (el.dataset.legend) legend = legendText(W, el.dataset.legend, v === 'mod');
+    el.style.setProperty('--w', w);
+    el.innerHTML = `<svg viewBox="0 0 ${W} 100" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="1" y="5" width="${W - 2}" height="94" rx="15" fill="url(#cap-${ox ? 'ox-' : ''}side)"/>
+      <rect x="1.5" y="5.5" width="${W - 3}" height="93" rx="14.5" fill="none" stroke="rgba(0,0,0,.55)"/>
+      <rect x="10" y="2" width="${W - 20}" height="76" rx="12" fill="url(#cap-${ox ? 'ox-' : ''}dish)"/>
+      <rect x="10.5" y="2.5" width="${W - 21}" height="75" rx="11.5" fill="none" stroke="url(#cap-rim)" stroke-width="1.4"/>
+      ${legend}</svg>`;
+  }
+  document.querySelectorAll('[data-cap]').forEach(capSVG);
+
+  // Topstitch the mat's binding: a rounded rect along the middle of the border, with stitch
+  // spacing adjusted so a whole number of stitches fits the perimeter (no seam anywhere).
+  const mat = document.querySelector('.mat'), binding = document.getElementById('binding');
+  function stitch() {
+    const band = parseFloat(getComputedStyle(mat).borderTopWidth);
+    const w = mat.offsetWidth, h = mat.offsetHeight, i = band / 2, rx = parseFloat(getComputedStyle(mat).borderTopLeftRadius) - i;
+    const P = 2 * (w - 2 * i - 2 * rx) + 2 * (h - 2 * i - 2 * rx) + 2 * Math.PI * rx;
+    const period = P / Math.round(P / 13), dash = `${period * .58} ${period * .42}`;
+    const rect = (stroke, width, extra = '') =>
+      `<rect x="${i}" y="${i}" width="${w - 2 * i}" height="${h - 2 * i}" rx="${rx}" fill="none" stroke="${stroke}" stroke-width="${width}" stroke-dasharray="${dash}" stroke-linecap="round" ${extra}/>`;
+    binding.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    binding.innerHTML =
+      rect('rgba(0,0,0,.6)', 3.4, 'transform="translate(0 1.2)"') +
+      rect('#cf9d44', 2.8) +
+      rect('#f6dc9f', 1, 'stroke-opacity=".85" transform="translate(-.4 -.6)"');
+  }
+  stitch();
+  new ResizeObserver(stitch).observe(mat);
+
+  // The demo
+  const $ = (s) => document.querySelector(s);
   const desk = $('#desk'), dock = $('#dock'), spot = $('#spotlight');
   const typed = $('#typed'), ghost = $('#ghost'), press = $('#press'), result = $('#result');
   const menuApp = $('#menu-app'), toggle = $('#playpause');
   const wins = [...desk.querySelectorAll('.win')];
+  const demoKeys = [...document.querySelectorAll('.keys .cap')];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const home = {
@@ -567,23 +626,13 @@ footer a { color: var(--fog); }
     dock.querySelectorAll('figure').forEach(f => f.classList.remove('running'));
     menuApp.textContent = 'Finder';
   }
-
-  function keyDown(keys) {
-    document.querySelectorAll('.keys .cap').forEach(c => c.classList.toggle('down', keys.includes(c.dataset.key)));
-  }
-  function keyUp() { document.querySelectorAll('.keys .cap.down').forEach(c => c.classList.remove('down')); }
-
-  function say(keys, text) {
-    press.textContent = keys;
-    result.textContent = text;
-  }
+  const keyDown = (keys) => demoKeys.forEach(c => c.classList.toggle('down', keys.includes(c.dataset.key)));
+  const keyUp = () => demoKeys.forEach(c => c.classList.remove('down'));
+  const say = (keys, text) => { press.textContent = keys; result.textContent = text; };
 
   function openApp(n) {
     const win = winFor(n), fig = figFor(n);
-    if (fig) {
-      fig.classList.remove('bounce'); void fig.offsetWidth; fig.classList.add('bounce');
-      fig.classList.add('running');
-    }
+    if (fig) { fig.classList.remove('bounce'); void fig.offsetWidth; fig.classList.add('bounce', 'running'); }
     win.classList.remove('closed');
     win.style.zIndex = ++z;
     wins.forEach(w => w.classList.toggle('front', w === win));
@@ -591,7 +640,6 @@ footer a { color: var(--fog); }
     menuApp.textContent = win.dataset.name;
     return win.dataset.name;
   }
-
   function snap(k) {
     if (!front) return;
     if (k === 's') {
@@ -603,14 +651,18 @@ footer a { color: var(--fog); }
     place(front, snaps[k]);
   }
 
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  async function spotlight() {
+    spot.classList.add('open'); ghost.textContent = 'Spotlight Search'; typed.textContent = '';
+    await wait(500); ghost.textContent = '';
+    for (const ch of 'Reminders') { typed.textContent += ch; await wait(70); }
+    await wait(700); spot.classList.remove('open'); typed.textContent = '';
+    return 'Spotlight';
+  }
+
   // One continuous take: each step is a press and what it did.
   const steps = [
-    { keys: ['hyper'], label: '⌘', run: async () => {
-        spot.classList.add('open'); ghost.textContent = 'Spotlight Search'; typed.textContent = '';
-        await wait(500); ghost.textContent = '';
-        for (const ch of 'Reminders') { typed.textContent += ch; await wait(70); }
-        await wait(700); spot.classList.remove('open'); typed.textContent = '';
-        return 'Spotlight'; } },
+    { keys: ['hyper'], label: '⌘', run: spotlight },
     { keys: ['hyper', '1'], label: '⌘ + 1', run: () => openApp(1) + ' opens' },
     { keys: ['hyper', '2'], label: '⌘ + 2', run: () => openApp(2) + ' opens' },
     { keys: ['hyper', 'a'], label: '⌘ + A', run: () => (snap('a'), 'Left half') },
@@ -621,9 +673,7 @@ footer a { color: var(--fog); }
     { keys: ['hyper', '6'], label: '⌘ + 6', run: () => openApp(6) + ' opens' },
   ];
 
-  const wait = ms => new Promise(r => setTimeout(r, ms));
   let playing = !reduce, token = 0;
-
   async function play() {
     const mine = ++token;
     while (playing && mine === token) {
@@ -635,25 +685,12 @@ footer a { color: var(--fog); }
         say(step.label, '…');
         await wait(260);
         keyUp();
-        const text = await step.run();
-        say(step.label, text);
+        say(step.label, await step.run());
         await wait(1500);
       }
       await wait(1200);
     }
   }
-
-  // Click the keys to drive it yourself (pauses the loop).
-  document.querySelectorAll('.keys .cap').forEach(cap => cap.addEventListener('click', async () => {
-    setPlaying(false);
-    const k = cap.dataset.key;
-    keyDown(k === 'hyper' ? ['hyper'] : ['hyper', k]);
-    setTimeout(keyUp, 180);
-    if (k === 'hyper') { const s = steps[0]; say('⌘', '…'); say('⌘', await s.run()); }
-    else if (/\d/.test(k)) say('⌘ + ' + k, openApp(+k) + ' to the front');
-    else { snap(k); say('⌘ + ' + k.toUpperCase(), { a: 'Left half', d: 'Right half', w: 'Maximize', s: 'Restore' }[k]); }
-  }));
-
   function setPlaying(on) {
     playing = on;
     toggle.textContent = on ? 'Pause' : 'Play';
@@ -661,9 +698,33 @@ footer a { color: var(--fog); }
   }
   toggle.addEventListener('click', () => setPlaying(!playing));
 
-  // Static, readable frame when motion is reduced: two windows snapped side by side.
+  // Click the keys to drive it yourself (pauses the loop).
+  demoKeys.forEach(cap => cap.addEventListener('click', async () => {
+    setPlaying(false);
+    const k = cap.dataset.key;
+    keyDown(k === 'hyper' ? ['hyper'] : ['hyper', k]);
+    setTimeout(keyUp, 180);
+    if (k === 'hyper') { say('⌘', '…'); say('⌘', await spotlight()); }
+    else if (/\d/.test(k)) say('⌘ + ' + k, openApp(+k) + ' to the front');
+    else { snap(k); say('⌘ + ' + k.toUpperCase(), { a: 'Left half', d: 'Right half', w: 'Maximize', s: 'Restore' }[k]); }
+  }));
+
+  // ?frame=spotlight|launch|snap freezes the demo on one finished result (for screenshots).
+  const frame = new URLSearchParams(location.search).get('frame');
   reset();
-  if (reduce) {
+  if (frame) {
+    document.documentElement.classList.add('still');
+    playing = false; toggle.textContent = 'Play';
+    if (frame === 'spotlight') {
+      keyDown(['hyper']); spot.classList.add('open'); ghost.textContent = ''; typed.textContent = 'Reminders';
+      say('⌘', 'Spotlight');
+    } else if (frame === 'launch') {
+      openApp(1); openApp(2); keyDown(['hyper', '2']); say('⌘ + 2', 'Firefox opens');
+    } else {
+      openApp(2); snap('a'); openApp(1); snap('d'); keyDown(['hyper', 'd']); say('⌘ + D', 'Right half');
+    }
+  } else if (reduce) {
+    // Still, readable frame when motion is reduced: two windows snapped side by side.
     openApp(2); snap('a'); openApp(1); snap('d');
     say('⌘ + A, ⌘ + D', 'Firefox left, Alacritty right');
     toggle.textContent = 'Play';
