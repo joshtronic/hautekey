@@ -16,9 +16,6 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         model.$showMenuBarIcon
             .sink { [weak self] visible in self?.setVisible(visible) }
             .store(in: &subscriptions)
-        model.$isPaused
-            .sink { [weak self] paused in self?.updateIcon(paused: paused) }
-            .store(in: &subscriptions)
     }
 
     func setVisible(_ visible: Bool) {
@@ -28,16 +25,15 @@ final class MenuBarController: NSObject, NSMenuDelegate {
             menu.delegate = self
             item.menu = menu
             self.item = item
-            updateIcon(paused: model.isPaused)
+            updateIcon()
         } else if !visible, let item {
             NSStatusBar.system.removeStatusItem(item)
             self.item = nil
         }
     }
 
-    private func updateIcon(paused: Bool) {
-        let name = paused ? "pause.circle" : "command"
-        let image = NSImage(systemSymbolName: name, accessibilityDescription: "Haute Key")
+    private func updateIcon() {
+        let image = NSImage(systemSymbolName: "command", accessibilityDescription: "Haute Key")
         image?.isTemplate = true
         item?.button?.image = image
     }
@@ -45,8 +41,6 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
         add(to: menu, "Settings…", #selector(openSettings), key: ",")
-        add(to: menu, model.isPaused ? "Resume Haute Key" : "Pause Haute Key", #selector(togglePause))
-        add(to: menu, "Open Config File", #selector(openConfigFile))
 
         let problems = model.problems
         if !problems.isEmpty {
@@ -73,11 +67,5 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         presenter.showSettings()
     }
 
-    @objc private func togglePause() {
-        model.setPaused(!model.isPaused)
-    }
 
-    @objc private func openConfigFile() {
-        NSWorkspace.shared.open(model.file.resolvedURL())
-    }
 }

@@ -7,6 +7,7 @@ struct SettingsView: View {
     let spotlight: SpotlightLauncher
 
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
+    @State private var isEditingRaw = false
 
     private enum TapKind: Hashable { case spotlight, app, keys }
 
@@ -24,6 +25,9 @@ struct SettingsView: View {
                             .symbolRenderingMode(.multicolor)
                             .fixedSize(horizontal: false, vertical: true)
                     }
+                    if model.configError != nil {
+                        Button("Edit Config File…") { isEditingRaw = true }
+                    }
                 }
             }
             Group {
@@ -33,8 +37,10 @@ struct SettingsView: View {
             }
             .disabled(model.configError != nil)
             thisMacSection
+            configFileSection
         }
         .formStyle(.grouped)
+        .sheet(isPresented: $isEditingRaw) { RawConfigEditor(model: model) }
         .frame(width: 480)
         .frame(minHeight: 420, idealHeight: 640)
     }
@@ -136,6 +142,22 @@ struct SettingsView: View {
                 Text("Open Haute Key again (from Spotlight or Finder) to get back to Settings.")
                     .font(.caption).foregroundStyle(.secondary)
             }
+        }
+    }
+
+    private var configFileSection: some View {
+        Section {
+            LabeledContent("config.json") {
+                HStack {
+                    Button("Edit…") { isEditingRaw = true }
+                    Button("Show in Finder", action: model.revealConfigFile)
+                }
+            }
+        } header: {
+            Text("Config file")
+        } footer: {
+            Text("Everything above is saved here. It can live in your dotfiles as a symlink; edits from any editor apply right away.")
+                .font(.caption).foregroundStyle(.secondary)
         }
     }
 

@@ -103,3 +103,22 @@ private var sample: Config {
 @Test func defaultURLIsUnderDotConfig() {
     #expect(ConfigFile.defaultURL.path.hasSuffix("/.config/hautekey/config.json"))
 }
+
+@Test func writeRawKeepsExactBytesAndSymlink() throws {
+    let box = try Sandbox()
+    try box.mkdir("dotfiles")
+    try box.symlink("config.json", to: box.url("dotfiles/config.json").path)
+    let raw = Data("{\n    \"version\": 1   // spacing kept as typed\n}".utf8)
+
+    try ConfigFile(url: box.url("config.json")).write(raw)
+
+    #expect(box.isSymlink("config.json"))
+    #expect(try Data(contentsOf: box.url("dotfiles/config.json")) == raw)
+}
+
+@Test func rawTextReadsBrokenFile() throws {
+    let box = try Sandbox()
+    try Data("{ broken".utf8).write(to: box.url("config.json"))
+    #expect(ConfigFile(url: box.url("config.json")).rawText() == "{ broken")
+    #expect(ConfigFile(url: box.url("missing.json")).rawText() == nil)
+}

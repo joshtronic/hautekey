@@ -10,11 +10,6 @@ struct LocalSettings {
         nonmutating set { defaults.set(newValue, forKey: "showMenuBarIcon") }
     }
 
-    var isPaused: Bool {
-        get { defaults.bool(forKey: "isPaused") }
-        nonmutating set { defaults.set(newValue, forKey: "isPaused") }
-    }
-
     var onboardingDone: Bool {
         get { defaults.bool(forKey: "onboardingDone") }
         nonmutating set { defaults.set(newValue, forKey: "onboardingDone") }

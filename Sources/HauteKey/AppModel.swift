@@ -1,3 +1,4 @@
+import AppKit
 import Combine
 import Foundation
 import HauteKeyCore
@@ -49,7 +50,6 @@ enum Problem: Hashable, Identifiable {
 final class AppModel: ObservableObject {
     @Published private(set) var config: Config
     @Published private(set) var configError: ConfigError?
-    @Published private(set) var isPaused: Bool
     @Published private(set) var showMenuBarIcon: Bool
     /// Problems found by the problem monitor (everything except config errors).
     @Published var detectedProblems: [Problem] = []
@@ -72,7 +72,6 @@ final class AppModel: ObservableObject {
         self.config = config
         self.configError = configError
         self.controller = controller
-        isPaused = settings.isPaused
         showMenuBarIcon = settings.showMenuBarIcon
     }
 
@@ -109,7 +108,7 @@ final class AppModel: ObservableObject {
             }
             return
         }
-        guard !isPaused, !controller.isRunning, controller.start() else { return }
+        guard !controller.isRunning, controller.start() else { return }
         if !settings.onboardingDone {
             settings.onboardingDone = true
             do {
@@ -150,10 +149,29 @@ final class AppModel: ObservableObject {
         }
     }
 
-    func setPaused(_ paused: Bool) {
-        isPaused = paused
-        settings.isPaused = paused
-        if paused { controller.stop() } else if Permissions.allGranted { controller.start() }
+    /// Validates and writes text from the raw editor exactly as typed. Returns the error
+    /// instead of saving when the text isn't a valid config.
+    func saveRaw(_ text: String) -> ConfigError? {
+        let data = Data(text.utf8)
+        let parsed: Config
+        do {
+            parsed = try ConfigCodec.decode(data)
+        } catch {
+            return error
+        }
+        do {
+            try file.write(data)
+        } catch {
+            return .syntax(line: nil, message: "Couldn't save: \(error.localizedDescription)")
+        }
+        watcher.noteOwnWrite(data)
+        configError = nil
+        apply(parsed)
+        return nil
+    }
+
+    func revealConfigFile() {
+        NSWorkspace.shared.activateFileViewerSelecting([file.resolvedURL()])
     }
 
     func setShowMenuBarIcon(_ show: Bool) {
