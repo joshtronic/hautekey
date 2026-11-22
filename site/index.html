@@ -182,7 +182,7 @@ h1 {
 .music { background: linear-gradient(160deg, #2b2a3a, #15131c); color: #ece6f2; }
 .music .bar { background: rgb(0 0 0 / .25); color: #bdb4cc; }
 .music .now { display: grid; grid-template-columns: auto 1fr; gap: 1.6cqw; align-items: center; padding: 1.8cqw 2cqw; }
-.music .art { width: 9cqw; aspect-ratio: 1; border-radius: .8cqw; background: radial-gradient(circle at 30% 70%, #6f8f5a 0 18%, transparent 19%), linear-gradient(170deg, #9fb4c9 0%, #9fb4c9 46%, #4e6a3f 47%, #2f4426 100%); }
+.music .art { width: 11cqw; aspect-ratio: 1; display: block; border-radius: .8cqw; object-fit: cover; box-shadow: 0 .6cqw 1.6cqw rgb(0 0 0 / .4); }
 .music small { display: block; opacity: .7; }
 .win.front { box-shadow: 0 1.8cqw 4.4cqw rgb(0 0 0 / .55), 0 0 0 1px rgb(255 255 255 / .14); }
 
@@ -196,12 +196,6 @@ h1 {
 .dock img { width: 5cqw; height: 5cqw; min-width: 18px; min-height: 18px; display: block; }
 .dock figure.bounce img { animation: bounce .55s cubic-bezier(.3, 0, .2, 1); }
 @keyframes bounce { 0%, 100% { transform: none; } 40% { transform: translateY(-1.6cqw); } }
-.dock figcaption {
-  position: absolute; top: -.6cqw; right: -.5cqw;
-  min-width: 1.9cqw; height: 1.9cqw; padding: 0 .5cqw; border-radius: 99px;
-  display: grid; place-items: center;
-  background: var(--gold); color: #152349; font: 700 max(8px, 1.05cqw)/1 var(--face);
-}
 .dock figure::after {
   content: ""; position: absolute; bottom: -.5cqw; width: .45cqw; height: .45cqw; min-width: 3px; min-height: 3px;
   border-radius: 50%; background: rgb(255 255 255 / .8); opacity: 0;
@@ -374,16 +368,16 @@ footer a { color: var(--fog); }
               </div>
               <div class="win music closed" data-app="6" data-name="Music">
                 <div class="bar"><i></i><i></i><i></i><em>Music</em></div>
-                <div class="now"><div class="art"></div><div><strong>On the Hill</strong><small>Venus on the Rocks</small></div></div>
+                <div class="now"><img class="art" src="/art/on-the-hill.webp" alt=""><div><strong>On the Hill</strong><small>Venus on the Rocks</small><small>almost good enough</small></div></div>
               </div>
             </div>
             <div class="dock" id="dock" aria-hidden="true">
-              <figure data-app="1"><img src="/apps/alacritty.webp" alt=""><figcaption>1</figcaption></figure>
-              <figure data-app="2"><img src="/apps/firefox.webp" alt=""><figcaption>2</figcaption></figure>
-              <figure data-app="3"><img src="/apps/messages.webp" alt=""><figcaption>3</figcaption></figure>
-              <figure data-app="4"><img src="/apps/notes.webp" alt=""><figcaption>4</figcaption></figure>
-              <figure data-app="5"><img src="/apps/reminders.webp" alt=""><figcaption>5</figcaption></figure>
-              <figure data-app="6"><img src="/apps/music.webp" alt=""><figcaption>6</figcaption></figure>
+              <figure data-app="1"><img src="/apps/alacritty.webp" alt=""></figure>
+              <figure data-app="2"><img src="/apps/firefox.webp" alt=""></figure>
+              <figure data-app="3"><img src="/apps/messages.webp" alt=""></figure>
+              <figure data-app="4"><img src="/apps/notes.webp" alt=""></figure>
+              <figure data-app="5"><img src="/apps/reminders.webp" alt=""></figure>
+              <figure data-app="6"><img src="/apps/music.webp" alt=""></figure>
             </div>
             <div class="spotlight" id="spotlight" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6"/></svg>
@@ -709,7 +703,7 @@ footer a { color: var(--fog); }
     else { snap(k); say('⌘ + ' + k.toUpperCase(), { a: 'Left half', d: 'Right half', w: 'Maximize', s: 'Restore' }[k]); }
   }));
 
-  // ?frame=spotlight|launch|snap freezes the demo on one finished result (for screenshots).
+  // ?frame=spotlight|launch|snap|music freezes the demo on one finished result (for screenshots).
   const frame = new URLSearchParams(location.search).get('frame');
   reset();
   if (frame) {
@@ -718,6 +712,8 @@ footer a { color: var(--fog); }
     if (frame === 'spotlight') {
       keyDown(['hyper']); spot.classList.add('open'); ghost.textContent = ''; typed.textContent = 'Reminders';
       say('⌘', 'Spotlight');
+    } else if (frame === 'music') {
+      openApp(1); openApp(2); openApp(6); keyDown(['hyper', '6']); say('⌘ + 6', 'Music opens');
     } else if (frame === 'launch') {
       openApp(1); openApp(2); keyDown(['hyper', '2']); say('⌘ + 2', 'Firefox opens');
     } else {
