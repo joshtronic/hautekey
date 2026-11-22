@@ -4,455 +4,672 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Haute Key</title>
-<meta name="description" content="The hautest key on your Mac. A free Hyper key for macOS: tap right ⌘ for Spotlight, hold it to jump to apps and snap windows.">
+<meta name="description" content="The hautest key on your Mac. A free Hyper key for macOS: tap right ⌘ for Spotlight, hold it to open apps and snap windows.">
 <meta property="og:title" content="Haute Key">
-<meta property="og:description" content="The hautest key on your Mac. Tap right ⌘ for Spotlight, hold it to jump to apps and snap windows.">
+<meta property="og:description" content="The hautest key on your Mac. Tap right ⌘ for Spotlight, hold it to open apps and snap windows.">
 <meta property="og:image" content="https://hautekey.app/og.png">
 <meta property="og:url" content="https://hautekey.app/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#2f3036">
+<meta name="theme-color" content="#1b2333">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Layout: one column of tailored cloth. The demo Mac is the single loud element, edged in gold topstitching; everything else is quiet, left-aligned type on charcoal wool. */
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/archivo-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
-  --wool: #2f3036;          /* page: charcoal suiting */
-  --wool-deep: #24252a;     /* sections set into the cloth */
-  --lining: #3b3d44;        /* raised surfaces, keycaps */
-  --chalk: #ecebe6;         /* primary text: tailor's chalk */
-  --felt: #a9a7a1;          /* secondary text */
-  --thread: #d9a94f;        /* gold topstitch */
-  --thread-light: #f3d593;
-  --oxblood: #8e2b34;       /* sponsor, sparingly */
-  --display: "Bodoni Moda", "Bodoni 72", "Didot", Georgia, serif;
-  --body: "Instrument Sans", -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --measure: 62ch;
-  --stitch: 2px dashed var(--thread);
+  --mat: #1b2333;
+  --mat-raised: #222c40;
+  --rule: #34405a;
+  --cap-side: #232428;
+  --cap: #3c3e45;
+  --cap-top: #4a4d55;
+  --gold: #d9a94f;
+  --gold-light: #f1d08d;
+  --oxblood: #8e2b34;
+  --oxblood-top: #a3363f;
+  --chalk: #edecE6;
+  --fog: #aab3c4;
+  --face: "Archivo", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --legend: "Archivo", -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI Symbol", sans-serif;
 }
+
 * { box-sizing: border-box; }
-html { background: var(--wool); }
+html { background: var(--mat); }
 body {
   margin: 0;
   color: var(--chalk);
-  font: 400 17px/1.6 var(--body);
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    var(--wool);
+  font: 400 17px/1.6 var(--face);
+  font-stretch: 100%;
+  background-color: var(--mat);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   -webkit-font-smoothing: antialiased;
+  padding: max(10px, env(safe-area-inset-top, 0px)) max(10px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px));
 }
-a { color: var(--thread-light); text-underline-offset: 3px; }
+::selection { background: var(--gold); color: var(--mat); }
+a { color: var(--gold-light); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { color: var(--chalk); }
-:focus-visible { outline: 2px solid var(--thread-light); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; border-radius: 6px; }
 
-.wrap {
-  max-width: 980px;
-  margin: 0 auto;
-  padding-left: max(20px, env(safe-area-inset-left, 0px));
-  padding-right: max(20px, env(safe-area-inset-right, 0px));
+/* The deskmat: one stitched edge around the whole page. */
+.mat {
+  border: 2px dashed var(--gold);
+  border-radius: 26px;
+  min-height: calc(100vh - 20px);
 }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: clamp(18px, 4vw, 48px); }
 
-/* Top bar */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--chalk); text-decoration: none; font-weight: 600; }
-.brand img { width: 32px; height: 32px; }
-.top nav { display: flex; gap: 20px; font-size: 15px; }
-.top nav a { color: var(--felt); text-decoration: none; }
-.top nav a:hover { color: var(--chalk); }
+/* Keycaps */
+.cap {
+  --size: 54px;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--size);
+  height: var(--size);
+  padding: 0 calc(var(--size) * .22);
+  border: 0;
+  border-radius: calc(var(--size) * .18);
+  background: var(--cap-side);
+  color: var(--gold-light);
+  font: 600 calc(var(--size) * .34)/1 var(--legend);
+  box-shadow: 0 calc(var(--size) * .14) calc(var(--size) * .2) rgb(0 0 0 / .35);
+  transition: transform .09s ease-out, box-shadow .09s ease-out;
+}
+.cap::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--size) * .06) calc(var(--size) * .09) calc(var(--size) * .16);
+  border-radius: calc(var(--size) * .13);
+  background: linear-gradient(170deg, var(--cap-top), var(--cap) 70%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .08);
+}
+.cap > * { position: relative; }
+.cap span, .cap svg { position: relative; transform: translateY(calc(var(--size) * -.05)); }
+.cap.down { transform: translateY(calc(var(--size) * .07)); box-shadow: 0 calc(var(--size) * .05) calc(var(--size) * .08) rgb(0 0 0 / .35); }
+.cap.hyper::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--size) * .14) calc(var(--size) * .17) calc(var(--size) * .24);
+  border: 1.5px dashed var(--gold);
+  border-radius: calc(var(--size) * .08);
+  opacity: .85;
+}
+.cap.hyper span { align-self: end; justify-self: end; margin: 0 calc(var(--size) * .08) calc(var(--size) * .28) 0; }
+.cap.wide { min-width: calc(var(--size) * 1.75); }
+.cap.accent { background: #5e1c23; color: #f6e3cf; }
+.cap.accent::before { background: linear-gradient(170deg, var(--oxblood-top), var(--oxblood) 70%); }
+.cap svg { width: 62%; height: 62%; }
+
+/* Header */
+header.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding-block: 22px;
+}
+.brand { display: flex; align-items: center; gap: 12px; color: var(--chalk); text-decoration: none; font-weight: 700; font-stretch: 112%; letter-spacing: .01em; }
+.brand img { width: 34px; height: 34px; }
+header nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 28px); font-size: 15px; }
+header nav a { color: var(--fog); text-decoration: none; }
+header nav a:hover { color: var(--chalk); }
 
 /* Hero */
-.hero { padding-block: 40px 28px; display: grid; gap: 18px; }
+.hero { display: grid; gap: 26px; padding-block: clamp(18px, 4vw, 40px) 12px; }
+.hero-copy { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
 h1 {
-  font: 500 clamp(44px, 8.4vw, 92px)/0.98 var(--display);
-  font-optical-sizing: auto;
-  letter-spacing: -0.015em;
   margin: 0;
-  max-width: 11ch;
+  font: 800 clamp(42px, 6.6vw, 88px)/0.95 var(--face);
+  font-stretch: 125%;
+  letter-spacing: -0.025em;
   text-wrap: balance;
+  max-width: 13ch;
 }
-.lede { font-size: clamp(18px, 2.2vw, 21px); color: var(--felt); margin: 0; max-width: 46ch; }
-.lede strong { color: var(--chalk); font-weight: 500; }
-.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; margin-top: 8px; }
-.button {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--chalk); color: var(--wool-deep);
-  font-weight: 600; font-size: 16px; text-decoration: none;
-  padding: 12px 20px; border-radius: 10px;
+.lede { margin: 18px 0 0; max-width: 54ch; color: var(--fog); font-size: clamp(17px, 1.6vw, 19px); }
+.lede strong { color: var(--chalk); font-weight: 600; }
+.get { display: grid; justify-items: start; gap: 10px; padding-bottom: 6px; }
+.button-cap {
+  --size: 58px;
+  min-width: 0;
+  color: #f6e3cf;
+  font: 700 18px/1 var(--face);
+  font-stretch: 112%;
+  text-decoration: none;
+  padding: 0 30px;
+  cursor: pointer;
 }
-.button:hover { background: #fff; color: var(--wool-deep); }
-.actions small { color: var(--felt); font-size: 14px; }
+.button-cap span { transform: translateY(-3px); }
+.button-cap:hover { color: #fff; }
+.button-cap:active { transform: translateY(4px); }
+.get small { color: var(--fog); font-size: 14px; }
 
-/* Demo */
-.demo { padding-block: 28px 24px; }
-.frame {
-  position: relative;
-  border: var(--stitch);
-  border-radius: 22px;
-  padding: 18px;
-  outline: 6px solid var(--wool-deep);
-  outline-offset: -12px;
-  background: var(--wool-deep);
+/* The demo: a Mac on the mat */
+.rig { display: grid; gap: 22px; justify-items: center; padding-top: 8px; }
+.mac {
+  width: 100%;
+  max-width: 1000px;
+  aspect-ratio: 16 / 10;
+  border-radius: 14px;
+  padding: 10px;
+  background: #0f131b;
+  box-shadow: 0 30px 60px rgb(0 0 0 / .45), 0 0 0 1px rgb(255 255 255 / .06);
 }
 .screen {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  border-radius: 10px;
-  overflow: hidden;
-  background: radial-gradient(120% 90% at 30% 20%, #4a5068 0%, #2b2f3f 55%, #1d1f29 100%);
+  position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 6px;
+  background:
+    radial-gradient(90% 70% at 22% 18%, #3d4f7c 0%, transparent 60%),
+    radial-gradient(70% 60% at 85% 90%, #6b2f45 0%, transparent 60%),
+    linear-gradient(160deg, #24304d, #161c2c);
   container-type: inline-size;
 }
 .menubar {
-  position: absolute; inset: 0 0 auto 0; height: 4.2cqw; min-height: 14px;
-  background: rgb(20 21 26 / .55); backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: space-between;
-  padding-inline: 2cqw; font-size: max(9px, 1.5cqw); color: #e9e8e4;
+  position: absolute; inset: 0 0 auto; height: 3.4cqw; min-height: 14px; z-index: 50;
+  display: flex; align-items: center; gap: 2cqw; padding-inline: 1.6cqw;
+  background: rgb(14 17 26 / .45); backdrop-filter: blur(10px);
+  font-size: max(9px, 1.25cqw); color: #e8e9ee;
 }
-.menubar .cmd { font-size: max(10px, 1.7cqw); opacity: .9; }
-.desk { position: absolute; inset: 4.2cqw 0 9.5cqw 0; }
+.menubar b { font-weight: 700; }
+.menubar .tray { margin-left: auto; display: flex; align-items: center; gap: 1.6cqw; }
+.menubar .tray svg { width: 1.5cqw; min-width: 9px; height: auto; }
+.desk { position: absolute; inset: 3.4cqw 0 0; }
 .win {
   position: absolute;
-  border-radius: 1.2cqw;
-  box-shadow: 0 1.4cqw 3cqw rgb(0 0 0 / .45);
+  border-radius: 1cqw;
   overflow: hidden;
-  transition: left .28s cubic-bezier(.2,.8,.2,1), top .28s cubic-bezier(.2,.8,.2,1),
-              width .28s cubic-bezier(.2,.8,.2,1), height .28s cubic-bezier(.2,.8,.2,1),
-              opacity .2s, transform .2s;
-  font-size: max(8px, 1.35cqw);
+  box-shadow: 0 1.6cqw 4cqw rgb(0 0 0 / .45), 0 0 0 1px rgb(255 255 255 / .07);
+  font-size: max(8px, 1.2cqw);
+  transition:
+    left .42s cubic-bezier(.16, 1, .3, 1), top .42s cubic-bezier(.16, 1, .3, 1),
+    width .42s cubic-bezier(.16, 1, .3, 1), height .42s cubic-bezier(.16, 1, .3, 1),
+    opacity .25s ease-out, transform .35s cubic-bezier(.16, 1, .3, 1);
 }
-.win .bar { height: 3cqw; min-height: 11px; display: flex; align-items: center; gap: .7cqw; padding-inline: 1.2cqw; }
-.win .bar i { width: 1.1cqw; height: 1.1cqw; min-width: 5px; min-height: 5px; border-radius: 50%; background: #ff5f57; }
+.win.closed { opacity: 0; transform: scale(.9) translateY(4%); pointer-events: none; }
+.win .bar { height: 2.8cqw; min-height: 12px; display: flex; align-items: center; gap: .6cqw; padding-inline: 1.1cqw; }
+.win .bar i { width: 1cqw; height: 1cqw; min-width: 5px; min-height: 5px; border-radius: 50%; background: #ff5f57; }
 .win .bar i:nth-child(2) { background: #febc2e; }
 .win .bar i:nth-child(3) { background: #28c840; }
-.win .bar span { margin-left: auto; margin-right: auto; }
-.win .body { padding: 1.4cqw 1.8cqw; line-height: 1.5; }
-.win.term { background: #17181c; color: #c9d1c4; }
-.win.term .bar { background: #222328; color: #aaa; }
-.win.term .body b { color: var(--thread-light); font-weight: 500; }
-.win.browser { background: #f4f3f0; color: #2b2b2b; }
-.win.browser .bar { background: #e3e1dc; color: #555; }
-.win.browser .body .line { height: 1cqw; min-height: 4px; background: #d6d3cc; border-radius: 99px; margin: 1cqw 0; }
-.win.notes { background: #fbf6dc; color: #3b3622; }
-.win.notes .bar { background: #efe6b8; color: #6b6340; }
-.win.music { background: #2a1f2c; color: #f2dfe7; }
-.win.music .bar { background: #3a2a3c; color: #c9a8b8; }
-.win.hidden { opacity: 0; transform: scale(.96); pointer-events: none; }
-.win.front { box-shadow: 0 1.4cqw 3cqw rgb(0 0 0 / .45), 0 0 0 2px rgb(243 213 147 / .55); }
+.win .bar em { font-style: normal; margin-inline: auto; opacity: .8; }
+.term { background: #141519; color: #c8cfd8; }
+.term .bar { background: #1e1f24; color: #9aa0ab; }
+.term pre { margin: 0; padding: 1.2cqw 1.6cqw; font: max(8px, 1.15cqw)/1.55 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; }
+.term .p { color: var(--gold-light); }
+.term .ok { color: #7fd18b; }
+.browser { background: #f3f2ef; color: #22252b; }
+.browser .bar { background: #e2e0db; color: #4d5058; }
+.browser .url { margin: .8cqw 1.4cqw; padding: .5cqw 1cqw; border-radius: 99px; background: #fff; color: #555a63; font-size: max(8px, 1.05cqw); }
+.browser .page { padding: 1cqw 2cqw; display: grid; gap: .9cqw; }
+.browser .page h4 { margin: 0; font: 800 max(10px, 2cqw)/1.1 var(--face); font-stretch: 125%; }
+.browser .ln { height: .9cqw; min-height: 4px; border-radius: 99px; background: #d4d1ca; }
+.music { background: linear-gradient(160deg, #3b1d2b, #1c1520); color: #f4e4ec; }
+.music .bar { background: rgb(0 0 0 / .25); color: #d7b9c8; }
+.music .now { display: grid; grid-template-columns: auto 1fr; gap: 1.6cqw; align-items: center; padding: 1.8cqw 2cqw; }
+.music .art { width: 9cqw; aspect-ratio: 1; border-radius: .8cqw; background: conic-gradient(from 200deg, #d9a94f, #8e2b34, #2b3a63, #d9a94f); }
+.music small { display: block; opacity: .7; }
+.win.front { box-shadow: 0 1.8cqw 4.4cqw rgb(0 0 0 / .55), 0 0 0 1px rgb(255 255 255 / .14); }
 
 .dock {
-  position: absolute; left: 50%; bottom: 1.6cqw; transform: translateX(-50%);
-  display: flex; gap: 1.2cqw; padding: .9cqw 1.2cqw;
-  background: rgb(255 255 255 / .14); backdrop-filter: blur(8px);
-  border-radius: 1.8cqw;
+  position: absolute; left: 50%; bottom: 1.4cqw; transform: translateX(-50%); z-index: 40;
+  display: flex; gap: .9cqw; padding: .8cqw; border-radius: 1.8cqw;
+  background: rgb(255 255 255 / .16); backdrop-filter: blur(14px);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .15);
 }
-.dock .app {
-  width: 5.4cqw; height: 5.4cqw; min-width: 22px; min-height: 22px;
-  border-radius: 1.3cqw; display: grid; place-items: center;
-  font-size: max(10px, 2.4cqw); position: relative;
-  transition: transform .18s;
+.dock figure { margin: 0; position: relative; display: grid; justify-items: center; }
+.dock img { width: 5cqw; height: 5cqw; min-width: 20px; min-height: 20px; display: block; transition: transform .25s cubic-bezier(.16, 1, .3, 1); }
+.dock figure.bounce img { animation: bounce .55s cubic-bezier(.3, 0, .2, 1); }
+@keyframes bounce { 0%, 100% { transform: none; } 40% { transform: translateY(-1.6cqw); } }
+.dock figcaption {
+  position: absolute; top: -.6cqw; right: -.5cqw;
+  min-width: 1.9cqw; height: 1.9cqw; padding: 0 .5cqw; border-radius: 99px;
+  display: grid; place-items: center;
+  background: var(--gold); color: #1b2333; font: 700 max(8px, 1.05cqw)/1 var(--face);
 }
-.dock .app.bounce { transform: translateY(-1.2cqw); }
-.dock .app em {
-  position: absolute; top: -1.2cqw; right: -1cqw;
-  font: 600 max(8px, 1.2cqw)/1 var(--body); font-style: normal;
-  background: var(--thread); color: var(--wool-deep);
-  border-radius: 99px; padding: .3cqw .6cqw;
+.dock figure::after {
+  content: ""; position: absolute; bottom: -.5cqw; width: .45cqw; height: .45cqw; min-width: 3px; min-height: 3px;
+  border-radius: 50%; background: rgb(255 255 255 / .8); opacity: 0;
 }
-.app.a1 { background: #17181c; color: var(--thread-light); }
-.app.a2 { background: #f4f3f0; color: #2a5bc0; }
-.app.a3 { background: #f6e27a; color: #6b5a12; }
-.app.a4 { background: #e4465d; color: #fff; }
+.dock figure.running::after { opacity: 1; }
 
 .spotlight {
-  position: absolute; left: 50%; top: 22%; width: 52%;
-  transform: translate(-50%, -6px) scale(.98);
-  background: rgb(38 39 45 / .92); backdrop-filter: blur(14px);
-  border: 1px solid rgb(255 255 255 / .14);
-  border-radius: 1.6cqw;
-  padding: 1.6cqw 2cqw;
-  display: flex; align-items: center; gap: 1.4cqw;
-  font-size: max(11px, 2.1cqw); color: #e9e8e4;
+  position: absolute; left: 50%; top: 24%; width: 46%; z-index: 60;
+  transform: translate(-50%, -8px) scale(.97);
+  display: flex; align-items: center; gap: 1.2cqw;
+  padding: 1.5cqw 1.8cqw;
+  border-radius: 2cqw;
+  background: rgb(36 38 46 / .82); backdrop-filter: blur(24px) saturate(1.3);
+  box-shadow: 0 2cqw 5cqw rgb(0 0 0 / .45), 0 0 0 1px rgb(255 255 255 / .12);
+  color: #eceef2; font-size: max(11px, 2cqw);
   opacity: 0; pointer-events: none;
-  transition: opacity .16s, transform .16s;
+  transition: opacity .18s ease-out, transform .22s cubic-bezier(.16, 1, .3, 1);
 }
 .spotlight.open { opacity: 1; transform: translate(-50%, 0) scale(1); }
-.spotlight .caret { width: 2px; height: 1em; background: var(--thread-light); animation: blink 1s steps(1) infinite; }
-.spotlight .hint { color: #a9a7a1; }
-@keyframes blink { 50% { opacity: 0; } }
+.spotlight svg { width: 2.2cqw; min-width: 12px; flex: none; }
+.spotlight .typed::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -.15em; background: var(--gold-light); }
+.spotlight .ghost { color: #8d93a1; }
 
-/* Key row under the screen */
-.keys {
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end;
-  gap: 10px; margin-top: 18px;
+/* Key row in sync with the demo */
+.keys { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: 10px; }
+.keys .gap { width: 22px; }
+.keys .cap { cursor: pointer; }
+.readout {
+  min-height: 2.2em; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+  font-size: 18px; color: var(--fog); text-align: center;
 }
-.keys .group { display: flex; gap: 8px; }
-.keys .gap { width: 18px; }
-.key {
-  appearance: none; border: 0; cursor: pointer;
-  font: 600 18px/1 var(--body); color: var(--chalk);
-  min-width: 52px; height: 52px; padding: 0 12px;
-  border-radius: 10px;
-  background: linear-gradient(#45474e, #3b3d44);
-  box-shadow: 0 4px 0 #1e1f23, inset 0 1px 0 rgb(255 255 255 / .08);
-  transition: transform .06s, box-shadow .06s, background .15s;
+.readout .press { color: var(--gold-light); font-weight: 700; font-stretch: 112%; font-family: var(--legend); }
+.readout .result { color: var(--chalk); }
+.readout svg { width: 18px; color: var(--fog); }
+.playpause {
+  appearance: none; border: 1px solid var(--rule); background: transparent; color: var(--fog);
+  border-radius: 99px; padding: 6px 14px; font: 500 14px/1 var(--face); cursor: pointer;
 }
-.key:active, .key.down { transform: translateY(3px); box-shadow: 0 1px 0 #1e1f23, inset 0 1px 0 rgb(255 255 255 / .06); }
-.key.hyper {
-  min-width: 92px; position: relative;
-  display: inline-flex; flex-direction: column; align-items: flex-end; justify-content: flex-end;
-  padding: 8px 12px; font-size: 24px; color: var(--thread-light);
-}
-.key.hyper::before {
-  content: ""; position: absolute; inset: 6px; border: 2px dashed var(--thread); border-radius: 6px; opacity: .8;
-}
-.key.hyper span { font-size: 11px; color: var(--felt); font-weight: 500; position: absolute; left: 12px; top: 10px; }
-.caption { text-align: center; color: var(--felt); font-size: 15px; margin: 14px 0 0; min-height: 1.6em; }
-.caption kbd { font: inherit; color: var(--chalk); }
+.playpause:hover { color: var(--chalk); border-color: var(--fog); }
 
 /* Sections */
-section.block { padding-block: 56px; border-top: 1px dashed rgb(217 169 79 / .35); }
-h2 { font: 500 clamp(30px, 4.4vw, 44px)/1.08 var(--display); margin: 0 0 22px; max-width: 20ch; text-wrap: balance; }
-p { max-width: var(--measure); }
-.legend { display: grid; grid-template-columns: max-content 1fr; gap: 14px 22px; align-items: center; margin: 0; }
-.legend dt { display: flex; gap: 6px; align-items: center; }
-.legend dd { margin: 0; color: var(--felt); }
-.legend dd strong { color: var(--chalk); font-weight: 500; }
-.cap {
-  display: inline-grid; place-items: center; min-width: 34px; height: 32px; padding: 0 9px;
-  border-radius: 7px; font: 600 15px/1 var(--body);
-  background: linear-gradient(#45474e, #3b3d44); box-shadow: 0 3px 0 #1e1f23;
+section.sheet { padding-block: clamp(56px, 8vw, 96px) 0; }
+h2 {
+  margin: 0 0 10px;
+  font: 800 clamp(30px, 4vw, 48px)/1 var(--face);
+  font-stretch: 125%;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
-.cap.gold { color: var(--thread-light); outline: 1.5px dashed var(--thread); outline-offset: -5px; }
-.plus { color: var(--felt); }
-.note { color: var(--felt); font-size: 15px; margin-top: 22px; }
+.sub { margin: 0 0 34px; color: var(--fog); max-width: 60ch; }
 
-.timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; max-width: 70ch; }
-.timeline li { display: grid; grid-template-columns: 4.2em 1fr; gap: 16px; }
-.timeline time { font: italic 500 22px/1.3 var(--display); color: var(--thread-light); }
-.timeline p { margin: 0; color: var(--felt); }
-.story-end { margin-top: 26px; font-size: 19px; }
-
-.free { display: grid; gap: 14px; }
-.sponsor {
-  display: inline-flex; align-items: center; gap: 10px; width: fit-content;
-  background: var(--oxblood); color: #f6ecd9; text-decoration: none;
-  font-weight: 600; padding: 12px 20px; border-radius: 10px;
+.kits { border-top: 1px solid var(--rule); }
+.kit {
+  display: grid; grid-template-columns: minmax(240px, 380px) 1fr; gap: 28px 48px; align-items: center;
+  padding-block: 30px; border-bottom: 1px solid var(--rule);
 }
-.sponsor:hover { background: #a3333d; color: #fff; }
+.kit h3 { margin: 0 0 6px; font: 700 22px/1.2 var(--face); font-stretch: 112%; }
+.kit p { margin: 0; color: var(--fog); max-width: 52ch; }
+.kit .render { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.kit .render .cap { --size: 50px; }
+.legend { display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; margin: 16px 0 0; }
+.legend dt { font: 700 15px/1.6 var(--legend); color: var(--gold-light); }
+.legend dd { margin: 0; color: var(--chalk); }
 
-footer { padding-block: 36px 48px; color: var(--felt); font-size: 14px; border-top: 1px dashed rgb(217 169 79 / .35); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
-footer a { color: var(--felt); }
+.specs { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.specs th, .specs td { text-align: left; vertical-align: top; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.specs th { width: 34%; padding-right: 24px; color: var(--fog); font-weight: 500; }
+.specs td { color: var(--chalk); }
+.specs code { font: 500 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace; color: var(--gold-light); overflow-wrap: anywhere; }
 
-@media (max-width: 640px) {
-  .top nav a.hide-sm { display: none; }
-  .frame { padding: 10px; border-radius: 16px; }
-  .key { min-width: 40px; height: 44px; font-size: 16px; }
-  .key.hyper { min-width: 70px; font-size: 20px; }
+.notes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 360px); gap: 40px 64px; align-items: start; }
+.notes p { margin: 0 0 18px; max-width: 62ch; }
+.notes .sig { color: var(--gold-light); font-weight: 600; font-stretch: 112%; }
+.trail { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.trail li { display: grid; grid-template-columns: 4.2em 1fr; gap: 14px; padding-block: 12px; border-bottom: 1px solid var(--rule); }
+.trail time { font: 800 18px/1.4 var(--face); font-stretch: 125%; color: var(--gold-light); }
+.trail a { color: var(--chalk); text-decoration: none; }
+.trail a:hover { color: var(--gold-light); text-decoration: underline; }
+.trail span { display: block; color: var(--fog); font-size: 15px; }
+
+.close { padding-block: clamp(64px, 9vw, 112px); display: grid; gap: 20px; justify-items: start; }
+.close h2 { font-size: clamp(36px, 5.6vw, 72px); max-width: 14ch; }
+.close p { margin: 0; color: var(--fog); max-width: 56ch; }
+.close .row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 8px; }
+
+footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-block: 28px 32px; border-top: 1px dashed rgb(217 169 79 / .45); color: var(--fog); font-size: 14px; }
+footer a { color: var(--fog); }
+
+@media (max-width: 760px) {
+  .hero-copy, .kit, .notes { grid-template-columns: 1fr; }
+  header nav .wide-only { display: none; }
   .keys .gap { display: none; }
-  .legend { grid-template-columns: 1fr; gap: 6px; }
+  .keys .cap { --size: 42px; }
+  .readout { font-size: 16px; }
+  .specs, .specs tbody, .specs tr, .specs th, .specs td { display: block; width: 100%; }
+  .specs th { padding: 14px 0 2px; border-bottom: 0; }
+  .specs td { padding: 0 0 14px; }
+  .legend { grid-template-columns: 1fr; gap: 2px; }
   .legend dd { margin-bottom: 10px; }
-  .timeline li { grid-template-columns: 1fr; gap: 2px; }
+  .trail li { grid-template-columns: 3.6em 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .win, .spotlight, .dock .app, .key { transition: none; }
-  .spotlight .caret { animation: none; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 </style>
 </head>
 <body>
+<div class="mat">
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="/"><img src="/icon.png" alt="" width="32" height="32">Haute Key</a>
-    <nav>
-      <a href="#how" class="hide-sm">How it works</a>
-      <a href="#why" class="hide-sm">Why</a>
+    <a class="brand" href="/"><img src="/icon.png" alt="" width="34" height="34">Haute Key</a>
+    <nav aria-label="Main">
+      <a class="wide-only" href="#kits">Kits</a>
+      <a class="wide-only" href="#specs">Specs</a>
+      <a class="wide-only" href="#notes">Notes</a>
       <a href="https://github.com/joshtronic/hautekey">GitHub</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <h1>The hautest key on your Mac.</h1>
-      <p class="lede"><strong>A Hyper key for macOS.</strong> Tap right ⌘ for Spotlight. Hold it to jump to your apps and snap windows into place. One small, free app; no Karabiner, no subscription.</p>
-      <div class="actions">
-        <a class="button" href="https://github.com/joshtronic/hautekey#install">Get Haute Key</a>
-        <small>Free and open source. macOS 15 or later.</small>
-      </div>
-    </section>
-
-    <section class="demo" aria-label="Try it">
-      <div class="frame">
-        <div class="screen" id="screen">
-          <div class="menubar"><span> Finder</span><span class="cmd">⌘</span></div>
-          <div class="desk" id="desk">
-            <div class="win term" data-app="1" style="left:6%;top:8%;width:46%;height:62%">
-              <div class="bar"><i></i><i></i><i></i><span>Terminal</span></div>
-              <div class="body">~ % <b>git push</b><br>Everything up-to-date<br>~ %</div>
-            </div>
-            <div class="win browser" data-app="2" style="left:36%;top:18%;width:52%;height:66%">
-              <div class="bar"><i></i><i></i><i></i><span>Browser</span></div>
-              <div class="body"><div class="line" style="width:70%"></div><div class="line" style="width:92%"></div><div class="line" style="width:84%"></div><div class="line" style="width:60%"></div></div>
-            </div>
-            <div class="win notes hidden" data-app="3" style="left:22%;top:12%;width:40%;height:58%">
-              <div class="bar"><i></i><i></i><i></i><span>Notes</span></div>
-              <div class="body">Pick up the suit<br>Hem the trousers 1/4"<br>Gold thread, not brass</div>
-            </div>
-            <div class="win music hidden" data-app="4" style="left:30%;top:22%;width:44%;height:52%">
-              <div class="bar"><i></i><i></i><i></i><span>Music</span></div>
-              <div class="body">Now playing<br>Vogue, Madonna</div>
-            </div>
-          </div>
-          <div class="dock" aria-hidden="true">
-            <div class="app a1" data-app="1">&gt;_<em>1</em></div>
-            <div class="app a2" data-app="2">◎<em>2</em></div>
-            <div class="app a3" data-app="3">✎<em>3</em></div>
-            <div class="app a4" data-app="4">♪<em>4</em></div>
-          </div>
-          <div class="spotlight" id="spotlight" aria-hidden="true">
-            <span>🔍︎</span><span class="caret"></span><span class="hint">Spotlight Search</span>
-          </div>
+    <section class="hero" aria-labelledby="title">
+      <div class="hero-copy">
+        <div>
+          <h1 id="title">The hautest key on your Mac.</h1>
+          <p class="lede"><strong>A Hyper key for macOS.</strong> Tap right ⌘ for Spotlight. Hold it with a number to open an app, or with W, A, S, or D to snap the window. One small app instead of Karabiner and Raycast.</p>
+        </div>
+        <div class="get">
+          <a class="cap accent button-cap" href="#get"><span>Get Haute Key</span></a>
+          <small>Pay what you want. Free and open source.</small>
         </div>
       </div>
 
-      <div class="keys" role="group" aria-label="Demo keys">
-        <div class="group">
-          <button class="key" data-key="1">1</button>
-          <button class="key" data-key="2">2</button>
-          <button class="key" data-key="3">3</button>
-          <button class="key" data-key="4">4</button>
+      <div class="rig">
+        <div class="mac" role="img" aria-label="Demo: a Mac desktop where Haute Key opens Spotlight, switches between Alacritty, Firefox, and Music, and snaps windows to the left half, right half, full screen, and back.">
+          <div class="screen">
+            <div class="menubar" aria-hidden="true">
+              <svg viewBox="0 0 14 17" width="11" fill="currentColor" aria-hidden="true"><path d="M11.6 9c0-2 1.7-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7s-1.6-.7-2.6-.7C3.4 4.4 2 5.2 1.3 6.6-.2 9.2.9 13 2.3 15c.7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.6c1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3 0 0-2.3-.9-2.3-3.6zM9.6 3c.6-.7 1-1.7.9-2.7-.9 0-1.9.6-2.5 1.3-.6.6-1 1.6-.9 2.6 1 .1 1.9-.5 2.5-1.2z"/></svg>
+              <b id="menu-app">Finder</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
+              <div class="tray">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
+                <span>Fri 9:41 AM</span>
+              </div>
+            </div>
+            <div class="desk" id="desk" aria-hidden="true">
+              <div class="win term closed" data-app="1" data-name="Alacritty">
+                <div class="bar"><i></i><i></i><i></i><em>~/Code/hautekey</em></div>
+                <pre><span class="p">~/Code/hautekey</span> main
+❯ swift test
+<span class="ok">✔</span> Test run with 90 tests passed
+<span class="p">~/Code/hautekey</span> main
+❯ </pre>
+              </div>
+              <div class="win browser closed" data-app="2" data-name="Firefox">
+                <div class="bar"><i></i><i></i><i></i><em>Haute Key</em></div>
+                <div class="url">hautekey.app</div>
+                <div class="page"><h4>The hautest key on your Mac.</h4><div class="ln" style="width:82%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:70%"></div></div>
+              </div>
+              <div class="win music closed" data-app="6" data-name="Music">
+                <div class="bar"><i></i><i></i><i></i><em>Music</em></div>
+                <div class="now"><div class="art"></div><div><strong>Vogue</strong><small>Madonna</small></div></div>
+              </div>
+            </div>
+            <div class="dock" id="dock" aria-hidden="true">
+              <figure data-app="1"><img src="/apps/alacritty.webp" alt=""><figcaption>1</figcaption></figure>
+              <figure data-app="2"><img src="/apps/firefox.webp" alt=""><figcaption>2</figcaption></figure>
+              <figure data-app="3"><img src="/apps/messages.webp" alt=""><figcaption>3</figcaption></figure>
+              <figure data-app="4"><img src="/apps/notes.webp" alt=""><figcaption>4</figcaption></figure>
+              <figure data-app="5"><img src="/apps/reminders.webp" alt=""><figcaption>5</figcaption></figure>
+              <figure data-app="6"><img src="/apps/music.webp" alt=""><figcaption>6</figcaption></figure>
+            </div>
+            <div class="spotlight" id="spotlight" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6"/></svg>
+              <span class="typed" id="typed"></span><span class="ghost" id="ghost">Spotlight Search</span>
+            </div>
+          </div>
         </div>
-        <span class="gap"></span>
-        <div class="group">
-          <button class="key" data-key="w">W</button>
-          <button class="key" data-key="a">A</button>
-          <button class="key" data-key="s">S</button>
-          <button class="key" data-key="d">D</button>
+
+        <div class="keys" aria-hidden="true">
+          <button class="cap" data-key="1" tabindex="-1"><span>1</span></button>
+          <button class="cap" data-key="2" tabindex="-1"><span>2</span></button>
+          <button class="cap" data-key="6" tabindex="-1"><span>6</span></button>
+          <span class="gap"></span>
+          <button class="cap" data-key="w" tabindex="-1"><span>W</span></button>
+          <button class="cap" data-key="a" tabindex="-1"><span>A</span></button>
+          <button class="cap" data-key="s" tabindex="-1"><span>S</span></button>
+          <button class="cap" data-key="d" tabindex="-1"><span>D</span></button>
+          <span class="gap"></span>
+          <button class="cap hyper wide" data-key="hyper" tabindex="-1"><span>⌘</span></button>
         </div>
-        <span class="gap"></span>
-        <button class="key hyper" data-key="hyper" aria-label="Right command: tap for Spotlight"><span>right</span>⌘</button>
+        <div class="readout" aria-live="polite">
+          <span class="press" id="press">⌘</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="result" id="result">Spotlight</span>
+          <button class="playpause" id="playpause" type="button">Pause</button>
+        </div>
       </div>
-      <p class="caption" id="caption">Click a key to try it. On a Mac, tap your own right <kbd>⌘</kbd> too.</p>
     </section>
 
-    <section class="block" id="how">
-      <h2>One key, one place, do it all.</h2>
-      <dl class="legend">
-        <dt><span class="cap gold">⌘</span></dt>
-        <dd><strong>Tap it</strong> to open Spotlight, or Raycast, Alfred, any app, or a shortcut you pick.</dd>
-        <dt><span class="cap gold">⌘</span><span class="plus">+</span><span class="cap">1</span><span class="plus">…</span><span class="cap">0</span></dt>
-        <dd><strong>Open or switch to an app.</strong> The first time you run it, the numbers follow the apps pinned in your Dock.</dd>
-        <dt><span class="cap gold">⌘</span><span class="plus">+</span><span class="cap">W</span></dt>
-        <dd><strong>Maximize</strong> the front window.</dd>
-        <dt><span class="cap gold">⌘</span><span class="plus">+</span><span class="cap">A</span><span class="cap">D</span></dt>
-        <dd><strong>Snap it</strong> to exactly the left or right half. No gaps, no 48%.</dd>
-        <dt><span class="cap gold">⌘</span><span class="plus">+</span><span class="cap">S</span></dt>
-        <dd><strong>Restore</strong> it to where it was before you snapped it.</dd>
-      </dl>
-      <p class="note">Any key from 0–9 or A–Z can open an app or snap a window. The Hyper key can be right ⌘, right ⌥, right ⌃, or Caps Lock, and Caps Lock can double as Control. Your setup is one plain file you can keep in your dotfiles.</p>
+    <section class="sheet" id="kits" aria-labelledby="kits-title">
+      <h2 id="kits-title">The kits</h2>
+      <p class="sub">Everything Haute Key does starts from one key. Here's what comes on it, out of the box.</p>
+      <div class="kits">
+        <div class="kit">
+          <div>
+            <h3>Base kit</h3>
+            <p>Tap the Hyper key to search. Hold it with a number to open or switch to an app. On first launch, the numbers follow the apps pinned in your Dock.</p>
+          </div>
+          <div>
+            <div class="render" aria-hidden="true">
+              <span class="cap hyper wide"><span>⌘</span></span>
+              <span class="cap"><span>1</span></span><span class="cap"><span>2</span></span><span class="cap"><span>3</span></span><span class="cap"><span>4</span></span><span class="cap"><span>5</span></span><span class="cap"><span>0</span></span>
+            </div>
+            <dl class="legend">
+              <dt>⌘ tap</dt><dd>Spotlight, or Raycast, Alfred, any app, or a shortcut you choose</dd>
+              <dt>⌘ + 1–9, 0</dt><dd>Open the app on that key, or bring it to the front</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="kit">
+          <div>
+            <h3>Window kit</h3>
+            <p>Exact halves of the screen, no gaps and no 48%. Restore puts a window back where it was before you snapped it.</p>
+          </div>
+          <div>
+            <div class="render" aria-hidden="true">
+              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2" fill="currentColor"/></svg></span>
+              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="3" y="5" width="9" height="14" rx="2" fill="currentColor"/></svg></span>
+              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="7" y="8" width="10" height="8" rx="1" fill="currentColor"/></svg></span>
+              <span class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="5" width="9" height="14" rx="2" fill="currentColor"/></svg></span>
+            </div>
+            <dl class="legend">
+              <dt>⌘ + W</dt><dd>Maximize</dd>
+              <dt>⌘ + A</dt><dd>Left half</dd>
+              <dt>⌘ + S</dt><dd>Restore</dd>
+              <dt>⌘ + D</dt><dd>Right half</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="kit">
+          <div>
+            <h3>Mods</h3>
+            <p>Pick the key that becomes Hyper, turn Caps Lock into Control, and bind any key from 0–9 or A–Z to an app or a snap.</p>
+          </div>
+          <div>
+            <div class="render" aria-hidden="true">
+              <span class="cap wide"><span>caps</span></span>
+              <span class="cap"><span>⌥</span></span>
+              <span class="cap"><span>⌃</span></span>
+              <span class="cap hyper wide"><span>⌘</span></span>
+            </div>
+            <dl class="legend">
+              <dt>Hyper key</dt><dd>Right ⌘, right ⌥, right ⌃, or Caps Lock</dd>
+              <dt>Caps Lock</dt><dd>Acts as Control, if you want it to</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section class="block" id="why">
-      <h2>Ten years of chasing GNOME's Super key.</h2>
-      <p>On GNOME, tapping Super opens search and holding it moves you around your apps and windows. I wanted the same thing on my Mac, on the right-hand key, where my thumb already is.</p>
-      <ol class="timeline">
-        <li><time>2014</time><p>Alfred for launching, Spectacle for windows. <a href="https://joshtronic.com/2014/07/20/tools-of-the-trade-2014/">Tools of the trade</a></p></li>
-        <li><time>2016</time><p>Hammerspoon, then Karabiner: tapping right ⌘ opens the launcher, and right ⌘ plus a number opens an app. <a href="https://joshtronic.com/2016/06/05/leveraging-the-power-of-the-right-command-key-in-os-x/">The right command key</a></p></li>
-        <li><time>2016</time><p>A macOS update broke Karabiner, and the "third-party hackery" sent me back to Linux. <a href="https://joshtronic.com/2016/10/16/switching-from-mac-os-x-back-to-linux-part-1/">Switching back</a></p></li>
-        <li><time>2024</time><p>Back on a Mac with Karabiner plus Raycast: right ⌘ for the launcher, numbers for apps, WASD for windows. <a href="https://joshtronic.com/2024/11/10/align-hotkeys-macos-gnome/">Aligning hotkeys</a></p></li>
-      </ol>
-      <p class="story-end">It worked, but it took two apps, and then window snapping went behind a subscription. Haute Key is that whole setup in one app.</p>
+    <section class="sheet" id="specs" aria-labelledby="specs-title">
+      <h2 id="specs-title">Specs</h2>
+      <p class="sub">The details, before you install anything.</p>
+      <table class="specs">
+        <tr><th scope="row">Runs on</th><td>macOS 15 or later, Apple silicon and Intel</td></tr>
+        <tr><th scope="row">Built with</th><td>Swift, as a native menu bar app. No kernel extension, no background daemon.</td></tr>
+        <tr><th scope="row">Permissions</th><td>Accessibility, to move windows. Input Monitoring, to see the Hyper key. The app walks you through both.</td></tr>
+        <tr><th scope="row">Settings</th><td>One plain file at <code>~/.config/hautekey/config.json</code>, edited in the app or by hand. Symlink it into your dotfiles; changes apply live.</td></tr>
+        <tr><th scope="row">License</th><td>GPL-3.0. The source is on <a href="https://github.com/joshtronic/hautekey">GitHub</a>.</td></tr>
+        <tr><th scope="row">Price</th><td>Pay what you want. $5 is a nice thank-you; $0 is fine.</td></tr>
+      </table>
     </section>
 
-    <section class="block free">
-      <h2>Free, and staying that way.</h2>
-      <p>Haute Key is open source under the GPL. There's no trial, no license key, and nothing to unlock. If it saves you a subscription, you can say thanks with a sponsorship.</p>
-      <a class="sponsor" href="https://github.com/sponsors/joshtronic">Sponsor on GitHub</a>
+    <section class="sheet" id="notes" aria-labelledby="notes-title">
+      <h2 id="notes-title">Designer's notes</h2>
+      <div class="notes">
+        <div>
+          <p>I bounce between GNOME and macOS, and GNOME gets one thing exactly right: the Super key. Tap it and you're searching. Hold it and press a number to jump to an app, or a direction to snap the window. I map it to the right-hand key, where my thumb already is.</p>
+          <p>I've chased that same muscle memory on a Mac for over a decade, through Alfred, Spectacle, Hammerspoon, Karabiner, and Raycast. The last setup worked, but it took two apps, and then window snapping went behind a subscription.</p>
+          <p>Haute Key is that whole setup in one small app: the key, the launcher tap, the app numbers, and the window snaps. It's what I use every day.</p>
+          <p class="sig">joshtronic</p>
+        </div>
+        <ol class="trail" aria-label="The road here">
+          <li><time>2014</time><div><a href="https://joshtronic.com/2014/07/20/tools-of-the-trade-2014/">Tools of the trade</a><span>Alfred for launching, Spectacle for windows</span></div></li>
+          <li><time>2016</time><div><a href="https://joshtronic.com/2016/06/05/leveraging-the-power-of-the-right-command-key-in-os-x/">The right command key</a><span>Karabiner: tap right ⌘ for the launcher</span></div></li>
+          <li><time>2016</time><div><a href="https://joshtronic.com/2016/10/16/switching-from-mac-os-x-back-to-linux-part-1/">Back to Linux</a><span>A macOS update broke the setup</span></div></li>
+          <li><time>2024</time><div><a href="https://joshtronic.com/2024/11/10/align-hotkeys-macos-gnome/">Aligning hotkeys</a><span>Karabiner plus Raycast, almost there</span></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="close" id="get" aria-labelledby="get-title">
+      <h2 id="get-title">Pay what you want.</h2>
+      <p>Haute Key is free and open source, and it always will be. Signed downloads are on the way; until then, it builds from source in a couple of minutes. If it saves you a subscription, a few dollars says thanks.</p>
+      <div class="row">
+        <a class="cap accent button-cap" href="https://github.com/joshtronic/hautekey#install"><span>Get Haute Key</span></a>
+        <a href="https://github.com/sponsors/joshtronic">Or sponsor on GitHub</a>
+      </div>
     </section>
   </main>
 
   <footer>
-    <span>Made by <a href="https://joshtronic.com">Josh Sherman</a>. GPL-3.0.</span>
-    <span><a href="https://github.com/joshtronic/hautekey">Source on GitHub</a></span>
+    <span>Haute Key by <a href="https://joshtronic.com">joshtronic</a>. GPL-3.0.</span>
+    <a href="https://github.com/joshtronic/hautekey">Source on GitHub</a>
   </footer>
+</div>
 </div>
 
 <script>
 (() => {
-  const desk = document.getElementById('desk');
-  const spotlight = document.getElementById('spotlight');
-  const caption = document.getElementById('caption');
-  const hyperKey = document.querySelector('.key.hyper');
+  const $ = (s, r = document) => r.querySelector(s);
+  const desk = $('#desk'), dock = $('#dock'), spot = $('#spotlight');
+  const typed = $('#typed'), ghost = $('#ghost'), press = $('#press'), result = $('#result');
+  const menuApp = $('#menu-app'), toggle = $('#playpause');
   const wins = [...desk.querySelectorAll('.win')];
-  let z = 10;
-  const restore = new Map();
-  let spotTimer;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const frontWin = () => wins.filter(w => !w.classList.contains('hidden'))
-    .sort((a, b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+  const home = {
+    1: { left: 8, top: 9, width: 50, height: 58 },
+    2: { left: 30, top: 14, width: 58, height: 66 },
+    6: { left: 24, top: 20, width: 42, height: 40 },
+  };
+  const snaps = {
+    a: { left: 0, top: 0, width: 50, height: 87 },
+    d: { left: 50, top: 0, width: 50, height: 87 },
+    w: { left: 0, top: 0, width: 100, height: 87 },
+  };
+  const saved = new Map();
+  let z = 10, front = null;
 
-  const say = (html) => { caption.innerHTML = html; };
+  const place = (win, f) => { for (const k in f) win.style[k] = f[k] + '%'; };
+  const winFor = n => desk.querySelector(`.win[data-app="${n}"]`);
+  const figFor = n => dock.querySelector(`figure[data-app="${n}"]`);
 
-  const focus = (n) => {
-    const win = desk.querySelector(`.win[data-app="${n}"]`);
-    win.classList.remove('hidden');
+  function reset() {
+    saved.clear(); front = null;
+    wins.forEach(w => { w.classList.add('closed'); w.classList.remove('front'); place(w, home[w.dataset.app]); });
+    dock.querySelectorAll('figure').forEach(f => f.classList.remove('running'));
+    menuApp.textContent = 'Finder';
+  }
+
+  function keyDown(keys) {
+    document.querySelectorAll('.keys .cap').forEach(c => c.classList.toggle('down', keys.includes(c.dataset.key)));
+  }
+  function keyUp() { document.querySelectorAll('.keys .cap.down').forEach(c => c.classList.remove('down')); }
+
+  function say(keys, text) {
+    press.textContent = keys;
+    result.textContent = text;
+  }
+
+  function openApp(n) {
+    const win = winFor(n), fig = figFor(n);
+    if (fig) {
+      fig.classList.remove('bounce'); void fig.offsetWidth; fig.classList.add('bounce');
+      fig.classList.add('running');
+    }
+    win.classList.remove('closed');
     win.style.zIndex = ++z;
     wins.forEach(w => w.classList.toggle('front', w === win));
-    const app = document.querySelector(`.dock .app[data-app="${n}"]`);
-    app.classList.add('bounce');
-    setTimeout(() => app.classList.remove('bounce'), 220);
-    say(`<kbd>⌘</kbd> + <kbd>${n}</kbd> brought ${win.querySelector('.bar span').textContent} to the front.`);
-  };
+    front = win;
+    menuApp.textContent = win.dataset.name;
+    return win.dataset.name;
+  }
 
-  const frames = { w: [0, 0, 100, 100], a: [0, 0, 50, 100], d: [50, 0, 50, 100] };
-  const names = { w: 'maximized it', a: 'snapped it left', d: 'snapped it right', s: 'restored it' };
-  const snap = (k) => {
-    const win = frontWin();
-    if (!win) return;
-    const current = ['left', 'top', 'width', 'height'].map(p => win.style[p]);
+  function snap(k) {
+    if (!front) return;
     if (k === 's') {
-      const back = restore.get(win);
-      if (back) { ['left', 'top', 'width', 'height'].forEach((p, i) => win.style[p] = back[i]); restore.delete(win); }
-    } else {
-      if (!restore.has(win)) restore.set(win, current);
-      const [l, t, w, h] = frames[k];
-      Object.assign(win.style, { left: l + '%', top: t + '%', width: w + '%', height: h + '%' });
+      const back = saved.get(front);
+      if (back) { place(front, back); saved.delete(front); }
+      return;
     }
-    say(`<kbd>⌘</kbd> + <kbd>${k.toUpperCase()}</kbd> ${names[k]}.`);
-  };
+    if (!saved.has(front)) saved.set(front, { ...home[front.dataset.app] });
+    place(front, snaps[k]);
+  }
 
-  const openSpotlight = () => {
-    spotlight.classList.add('open');
-    clearTimeout(spotTimer);
-    spotTimer = setTimeout(() => spotlight.classList.remove('open'), 2200);
-    say('A tap of <kbd>⌘</kbd> opened Spotlight.');
-  };
+  // One continuous take: each step is a press and what it did.
+  const steps = [
+    { keys: ['hyper'], label: '⌘', run: async () => {
+        spot.classList.add('open'); ghost.textContent = 'Spotlight Search'; typed.textContent = '';
+        await wait(500); ghost.textContent = '';
+        for (const ch of 'Reminders') { typed.textContent += ch; await wait(70); }
+        await wait(700); spot.classList.remove('open'); typed.textContent = '';
+        return 'Spotlight'; } },
+    { keys: ['hyper', '1'], label: '⌘ + 1', run: () => openApp(1) + ' opens' },
+    { keys: ['hyper', '2'], label: '⌘ + 2', run: () => openApp(2) + ' opens' },
+    { keys: ['hyper', 'a'], label: '⌘ + A', run: () => (snap('a'), 'Left half') },
+    { keys: ['hyper', '1'], label: '⌘ + 1', run: () => openApp(1) + ' to the front' },
+    { keys: ['hyper', 'd'], label: '⌘ + D', run: () => (snap('d'), 'Right half') },
+    { keys: ['hyper', 'w'], label: '⌘ + W', run: () => (snap('w'), 'Maximize') },
+    { keys: ['hyper', 's'], label: '⌘ + S', run: () => (snap('s'), 'Restore') },
+    { keys: ['hyper', '6'], label: '⌘ + 6', run: () => openApp(6) + ' opens' },
+  ];
 
-  const press = (k) => {
-    spotlight.classList.remove('open');
-    if (k === 'hyper') return openSpotlight();
-    hyperKey.classList.add('down');
-    setTimeout(() => hyperKey.classList.remove('down'), 160);
-    if (/^[1-4]$/.test(k)) focus(k); else snap(k);
-  };
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  let playing = !reduce, token = 0;
 
-  document.querySelectorAll('.key').forEach(btn => btn.addEventListener('click', () => press(btn.dataset.key)));
+  async function play() {
+    const mine = ++token;
+    while (playing && mine === token) {
+      reset();
+      await wait(900);
+      for (const step of steps) {
+        if (!playing || mine !== token) return;
+        keyDown(step.keys);
+        say(step.label, '…');
+        await wait(260);
+        keyUp();
+        const text = await step.run();
+        say(step.label, text);
+        await wait(1500);
+      }
+      await wait(1200);
+    }
+  }
 
-  // Physical right ⌘: only a clean tap. Holding ⌘ with W would close the browser tab, so the
-  // combos stay on-screen.
-  let rightDown = false, other = false;
-  addEventListener('keydown', (e) => {
-    if (e.code === 'MetaRight') { rightDown = true; other = false; hyperKey.classList.add('down'); }
-    else if (rightDown) other = true;
-  });
-  addEventListener('keyup', (e) => {
-    if (e.code !== 'MetaRight') return;
-    hyperKey.classList.remove('down');
-    if (rightDown && !other) openSpotlight();
-    rightDown = false;
-  });
-  addEventListener('blur', () => { rightDown = false; hyperKey.classList.remove('down'); });
+  // Click the keys to drive it yourself (pauses the loop).
+  document.querySelectorAll('.keys .cap').forEach(cap => cap.addEventListener('click', async () => {
+    setPlaying(false);
+    const k = cap.dataset.key;
+    keyDown(k === 'hyper' ? ['hyper'] : ['hyper', k]);
+    setTimeout(keyUp, 180);
+    if (k === 'hyper') { const s = steps[0]; say('⌘', '…'); say('⌘', await s.run()); }
+    else if (/\d/.test(k)) say('⌘ + ' + k, openApp(+k) + ' to the front');
+    else { snap(k); say('⌘ + ' + k.toUpperCase(), { a: 'Left half', d: 'Right half', w: 'Maximize', s: 'Restore' }[k]); }
+  }));
+
+  function setPlaying(on) {
+    playing = on;
+    toggle.textContent = on ? 'Pause' : 'Play';
+    if (on) play();
+  }
+  toggle.addEventListener('click', () => setPlaying(!playing));
+
+  // Static, readable frame when motion is reduced: two windows snapped side by side.
+  reset();
+  if (reduce) {
+    openApp(2); snap('a'); openApp(1); snap('d');
+    say('⌘ + A, ⌘ + D', 'Firefox left, Alacritty right');
+    toggle.textContent = 'Play';
+  } else {
+    play();
+  }
 })();
 </script>
 </body>

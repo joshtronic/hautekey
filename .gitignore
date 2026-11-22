@@ -11,3 +11,9 @@ build/
 !.dev.vars.example
 .env*
 !.env.example
+
+# design-tool notes (kept private)
+PRODUCT.md
+DESIGN.md
+DESIGN.*.md
+.impeccable/
